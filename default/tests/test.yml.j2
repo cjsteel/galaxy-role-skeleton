@@ -1,0 +1,16 @@
+---
+# roles/{{ role_name }}/tests/test.yml
+
+- hosts: localhost
+  remote_user: root
+  pre_tasks:
+
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
+
+  roles:
+
+    - {{ role_name }}

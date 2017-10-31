@@ -1,0 +1,19 @@
+---
+# roles/{{ role_name }}/defaults/main.yml
+
+{{ role_name }}_beta  : true
+{{ role_name }}_debug : true
+
+{{ role_name }}_long_role_name : 'ansible-role-{{ role_name }}'
+{{ role_name }}_state          : 'present'
+
+# Version revisions
+
+{{ role_name }}_major    : '0'
+{{ role_name }}_moderate_revision : '0'
+{{ role_name }}_minor_revision    : '1'
+{{ role_name }}_build             : ''
+
+{{ role_name }}_version : '{{ {{ role_name }}_major }}.{{ {{ role_name }}_mmoderate }}.{{ {{ role_name }}_minor }}'
+
+
