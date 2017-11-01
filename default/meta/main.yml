@@ -4,7 +4,7 @@ dependencies: []
 
 galaxy_info:
   author: Christopher Steel
-  description: 'default described in 1 sentence...'
+  description: 'custom role template for creating roles with ansible-galaxy'
   company: McGill Centre for Integrative Neuroscience
   license: MIT
   min_ansible_version: '1.7.1'
@@ -25,10 +25,16 @@ ansigenome_info:
   travis: True
 
   synopsis: |
-    default described in a few paragraphs....
+    This is a drop in replacement role skeleton used to create ansible roles with the ansible-galaxy command.
 
   usage: |
-    Describe how to use default...
+    You can replace the default ansble-galaxy role skeleton or point to this one using the ansible-galaxy ROLE_SKELETON option.
+
+    For example, to replace the default directory provided by an ansible installation using a miniconda python environment with ansible installed using pip you might have a path like this:
+
+    ```shell
+    ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default
+    ```
 
   #custom: |
   #  Any custom output you want after the usage section...
