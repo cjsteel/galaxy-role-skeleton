@@ -8,6 +8,7 @@ galaxy_info:
   company: McGill Centre for Integrative Neuroscience
   license: MIT
   min_ansible_version: '1.7.1'
+
   platforms:
     - name: Ubuntu
       versions:
@@ -17,6 +18,7 @@ galaxy_info:
       versions:
         - wheezy
         - jessie
+
   categories: []
 
 ansigenome_info:
@@ -25,7 +27,7 @@ ansigenome_info:
   travis: True
 
   synopsis: |
-    This is a drop in replacement role skeleton used to create ansible roles with the ansible-galaxy command.
+    The {{ role_name }}
 
   usage: |
     You can replace the default ansble-galaxy role skeleton or point to this one using the ansible-galaxy ROLE_SKELETON option.
