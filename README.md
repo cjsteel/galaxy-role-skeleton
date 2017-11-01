@@ -35,7 +35,7 @@ Here is an example using a miniconda created python environment called ansible w
 rm -R ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default
 # replace is with this one
 cd ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/
-git clone git@github.com:cjsteel/ansible-galaxy-template.git
+git clone git@github.com:cjsteel/galaxy-role-default.git
 ```
 
 
