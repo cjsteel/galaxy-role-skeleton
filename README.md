@@ -31,13 +31,43 @@ If you want to completely replace the default ansible role skeleton directory pr
 Here is an example using a miniconda created python environment called ansible with a pip installed version of ansible.
 
 ```shell
-# delete the default ansible-galaxy role skeleton
-rm -R ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default
-# replace is with this one
 cd ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/
-git clone git@github.com:cjsteel/galaxy-role-default.git
+mv default default.org
+git clone git@github.com:cjsteel/galaxy-role-default.git default
 ```
 
+## Developing this role skeleton
+
+If you wnat to customize a lot of items in this role skeleton it might be a good idea to set things up like this:
+
+```shell
+cd ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/
+git clone git@github.com:cjsteel/galaxy-role-default.git default.new
+```
+
+copy a single file to edit to the original default directory. Add the extension `.j2`
+
+```shell
+cp defaults.new/README.md defaults/README.md.j2
+nano defaults/README.md.j2 
+```
+
+Create a test role using ansible-galaxy:
+
+```shell
+ansible-galaxy init --force test -vvv
+```
+
+Ensure you are getting the output you want.
+
+```shell
+cat ~/projects/test/README.md
+```
+
+Once you are ready:
+* commit all your changes
+* move the original default dir
+* clone your new default dir to replace the default directory.
 
 ### Authors and license
 
