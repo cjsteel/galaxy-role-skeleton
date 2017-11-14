@@ -4,7 +4,7 @@ dependencies: []
 
 galaxy_info:
   author: Christopher Steel
-  description: 'custom role template for creating roles with ansible-galaxy'
+  description: '{{ role_name }} is used to...'
   company: McGill Centre for Integrative Neuroscience
   license: MIT
   min_ansible_version: '1.7.1'
@@ -12,14 +12,15 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-        - precise
-        - trusty
-    - name: Debian
-      versions:
-        - wheezy
-        - jessie
+#        - precise
+#        - trusty
+        - xenial
+#    - name: Debian
+#      versions:
+#        - wheezy
+#        - jessie
 
-  categories: []
+  categories: [ansible, role]
 
 ansigenome_info:
   galaxy_id: ''
@@ -30,13 +31,9 @@ ansigenome_info:
     The {{ role_name }}
 
   usage: |
-    You can replace the default ansble-galaxy role skeleton or point to this one using the ansible-galaxy ROLE_SKELETON option.
+    Please see the docs directory for additional documentation on using this role here:
 
-    For example, to replace the default directory provided by an ansible installation using a miniconda python environment with ansible installed using pip you might have a path like this:
-
-    ```shell
-    ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default
-    ```
+* [docs/main.md](docs/main.md)
 
   #custom: |
   #  Any custom output you want after the usage section...
