@@ -1,0 +1,13 @@
+--- # group_vars/all/defaults.yml
+{% raw %}
+## controller user vars
+
+project_controller_user_name: '{{ fact_controller_user }}'
+project_controller_user_home: '{{ fact_controller_home }}'
+
+
+## deployment user vars
+
+project_deployment_user_name: '{{ project_controller_user_name }}' # 'cjsteel' # 'jle' ... 
+project_deployment_user_home: '/home/{{ project_deployment_user_name }}' # '/home/users/{{ projec...
+{% end_raw %}
