@@ -30,8 +30,18 @@ Real world example
 mkdir ~/projects
 cd ~/projects
 git clone git@github.com:cjsteel/galaxy-role-default.git
-ansible-galaxy init --role-skeleton='~/projects/galaxy-role-default/skeleton' -f my_new_role
+ansible-galaxy init --role-skeleton=/home/cjs/projects/galaxy-role-default/skeleton -f ansible-role-download -vvv
 ```
+
+#### Replacing the ansible galaxy default role template
+
+```shell
+cd ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default
+mv default default.org
+git clone git@github.com:cjsteel/galaxy-role-default.git default
+```
+
+
 
 ### Authors and license
 
