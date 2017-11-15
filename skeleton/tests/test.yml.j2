@@ -1,7 +1,10 @@
 --- # roles/{{ role_name }}/tests/test.yml
 
 - hosts: localhost
-  remote_user: root
+  connection: local
+  remote_user: root  
+  become: true
+  gather_facts: true
   pre_tasks:
 {% raw %}
     - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
@@ -12,4 +15,5 @@
 {% endraw %}
   roles:
 
-    - {{ role_name }}
+    - ../../
+#    - {{ role_name }}

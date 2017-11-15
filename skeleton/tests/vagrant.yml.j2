@@ -1,0 +1,83 @@
+--- # roles/{{ role_name }}/tests/vagrant.yml
+
+---
+# file: roles/clone/tests/vagrant.yml
+
+- hosts: localhost    # all
+#  connection: local
+  remote_user: ubuntu # root
+  become: false       # or local directory creation will fail
+  gather_facts: true
+  pre_tasks:
+
+{% raw %}
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
+
+    - set_fact: fact_role_path="{{ lookup('pipe','pwd')|dirname }}"
+    - debug: var=fact_role_path
+
+    - set_fact: fact_role_name="{{ lookup('pipe','pwd')|dirname|basename }}"
+    - debug: var=fact_role_name2
+{% endraw %}
+  vars:
+
+    - clone_remote_user : 'ubuntu'
+    - {{ role_name }}_controller_user: '{{ '{{' }} project_controller_user_home {{ '}}' }}'
+    - {{ role_name }}_controller_home: '{{ '{{' }} project_controller_user_home {{ '}}' }}'
+
+    - {{ role_name }}_deployment_user: '{{ '{{' }} project_deployment_user_name {{ '}}' }}'
+    - {{ role_name }}_deployment_home: '{{ '{{' }} project_deployment_user_home {{ '}}' }}'
+
+## atomic versioning example
+#
+#    - {{ role_name }}_major             : '0'
+#    - {{ role_name }}_moderate_revision : '0'
+#    - {{ role_name }}_minor_revision    : '1'
+#    - {{ role_name }}_build             : ''
+
+## Package
+    - {{ role_name }}_package_state   : 'present'
+    - {{ role_name }}_package_version : '2.0.1'
+    - {{ role_name }}_package_name    : "vagrant_{{ '{{' }} {{ role_name }}_package_version {{ '}}' }}_i686.deb"
+
+    - {{ role_name }}_controller_resource_dir : '{{ project_deployment_user_home }}/src/sw/vagrant/debs/'
+    - {{ role_name }}_remote_resource_dir     : '{{ project_deployment_user_home }}/src/sw/vagrant/debs/'
+
+# Resource URLs
+
+    - {{ role_name }}_package_url      : "https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_i686.deb"
+#    - {{ role_name }}_checksum_url     : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS"
+#    - {{ role_name }}_checksum_sig_url : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS.sig"
+
+# Directories
+
+    - {{ role_name }}_dirs_on_local:
+
+        {{ role_name }}_local_resources_dir:
+
+          state       : 'directory'
+          path        : '{{ '{{' }} {{ role_name }}_controller_home {{ '}}' }}/src/sw/vagrant/debs/'
+          owner       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+          group       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+          mode        : '0755'
+
+    - {{ role_name }}_dirs_on_remote:
+
+        {{ role_name }}_remote_resource_dir:
+
+          state          : 'directory'
+          path           : '{{ '{{' }} {{ role_name }}_deployment_home {{ '}}' }}/src/sw/vagrant/debs/'
+          owner          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          group          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          mode           : '0755'
+
+  roles:
+
+    - ../../
+#    - {{ role_name }}
+
+

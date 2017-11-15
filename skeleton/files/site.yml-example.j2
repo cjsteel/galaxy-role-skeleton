@@ -1,0 +1,28 @@
+---
+# file: project/site.yml
+
+- hosts: all
+  become: false
+  gather_facts: true
+  pre_tasks:
+{% raw %}
+    - set_fact: fact_controller_user="{/{ lookup('env','USER') }/}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{/{ lookup('env','HOME') }/}"
+    - debug: var=fact_controller_home
+
+    - set_fact: fact_project_path="{{ lookup('pipe','pwd') }}"
+    - debug: var=fact_project_path
+{% endraw %}
+
+- include: deployment_user.yml
+
+- include: shorewall.yml
+
+- include: ldap.yml
+
+- include: workstation.yml
+
+- {{ role_name }}
+

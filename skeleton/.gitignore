@@ -1,12 +1,14 @@
 # temp files
 *~
 .swp
-.vagrant
-vagrant.retry
+
+# others
+
 *.log
-# private files
 .private
 .prv
 .retry
+vagrant.retry
+.vagrant
 .vault
 
