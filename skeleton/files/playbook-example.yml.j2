@@ -5,15 +5,13 @@
   become: true
   gather_facts: true
   pre_tasks:
-
-# remove the "/" from the curly braces before using!
-
+{% raw %}
     - set_fact: fact_controller_user="{/{ lookup('env','USER') }/}"
     - debug: var=fact_controller_user
 
     - set_fact: fact_controller_home="{/{ lookup('env','HOME') }/}"
     - debug: var=fact_controller_home
-
+{% endraw %}
   roles:
 
     - {{ role_name }}
