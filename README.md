@@ -41,8 +41,6 @@ mv default default.org
 git clone git@github.com:cjsteel/galaxy-role-default.git default
 ```
 
-
-
 ### Authors and license
 
 `galaxy-role-default/default` role was written by:
