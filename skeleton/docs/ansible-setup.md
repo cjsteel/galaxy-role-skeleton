@@ -17,10 +17,10 @@ ansible 2.4.0.0
 ansible 2.3.2.0
 ansible 2.3.1.0
 ansible 2.3.0.0
-ansible 2.2.3.0
-ansible 2.2.2.0
-ansible 2.2.1.0
-ansible 2.2.0.0
+ansible 2.2.3.0	# ansible-galaxy: error: no such option: --role-skeleton
+ansible 2.2.2.0	# ansible-galaxy: error: no such option: --role-skeleton
+ansible 2.2.1.0 # ansible-galaxy: error: no such option: --role-skeleton
+ansible 2.2.0.0 # ansible-galaxy: error: no such option: --role-skeleton
 ansible 2.1.6.0
 ansible 2.1.5.0
 ansible 2.1.4.0
@@ -43,16 +43,16 @@ Make a note of the version you want to install
 
 ### Ensure for a virtual environment
 
-Here we create a virtual environment called **ansible-2.2** that will include python2.x
+Here we create a virtual environment called **ansible-2.3** that will include python2.x
 
 ```shell
-conda create -y -n ansible-2.2 python=2
+conda create -y -n ansible-2.3 python=2
 ```
 
 ### activate the target virtual environment
 
 ```shell
-source activate ansible-2.2
+source activate ansible-2.3
 ```
 
 ### Confirm active virtual environment
@@ -60,21 +60,21 @@ source activate ansible-2.2
 Confirm that the environment is active by verifying that the virtual environment name is prepended to your command prompt as follows:
 
 ```shell
-(ansible-2.2) cjs@automa:~/projects$ 
+(ansible-2.3) cjs@automa:~/projects$ 
 ```
 
 Alternativly you can use the commend `which python` and confirm that the path returned is located in your target virtual environment:
 
 ```shell
-/home/cjs/miniconda2/envs/ansible-2.2/bin/python
+/home/cjs/miniconda2/envs/ansible-2.3/bin/python
 ```
 
 ### Install the latest iteration of your target ansible version
 
-If you want ansible 2.2 you probably the latest revision, 2.2.3.0. The following will install ansible as well as any dependancies.
+If you want ansible 2.3 you probably the latest revision, 2.3.2.0. The following will install ansible as well as any dependancies.
 
 ```shell
-pip install 'ansible==2.2.3.0' 
+pip install 'ansible==2.3.2.0' 
 ```
 
 Installation confirmation
@@ -86,7 +86,7 @@ which ansible
 Output example
 
 ```shell
-/home/cjs/miniconda2/envs/ansible-2.2/bin/ansible
+/home/cjs/miniconda2/envs/ansible-2.3/bin/ansible
 ```
 
 Version confirmation
@@ -98,7 +98,7 @@ ansible --version
 Output example
 
 ```shell
-ansible 2.1.0.0
+ansible 2.3.2.0
   config file = 
   configured module search path = Default w/o overrides
 ```
