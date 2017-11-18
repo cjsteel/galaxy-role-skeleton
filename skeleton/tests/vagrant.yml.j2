@@ -16,8 +16,8 @@
     - set_fact: fact_role_path="{{ lookup('pipe','pwd')|dirname }}"
     - debug: var=fact_role_path
 
-    - set_fact: fact_role_name="{{ lookup('pipe','pwd')|dirname|basename }}"
-    - debug: var=fact_role_name2
+#    - set_fact: fact_role_name="{{ lookup('pipe','pwd')|dirname|basename }}"
+#    - debug: var=fact_role_name2
 {% endraw %}
   vars:
 
