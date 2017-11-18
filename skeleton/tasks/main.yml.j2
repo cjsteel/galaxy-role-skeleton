@@ -1,20 +1,20 @@
 --- # roles/{{ role_name }}/tasks/main.yml
 
 - name: Load OS specific variables
-  include_vars: "{{ role_path }}/vars/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
+  include_vars: "{{ '{{' }} fact_role_path {{ '}}' }}/vars/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
   tags:
     - {{ role_name }}
     - install
 
 - name: "Debug variable values"
-  include: "{{ role_path }}/tasks/debug.yml"
+  include: "{{ '{{' }} fact_role_path {{ '}}' }}/tasks/debug.yml"
   when: {{ role_name }}_debug
   tags:
     - {{ role_name }}
     - debug
 
 - name: Run any OS specific tasks
-  include: "{{ role_path }}/tasks/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
+  include: "{{ '{{' }} fact_role_path {{ '}}' }}/tasks/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
   tags:
     - {{ role_name }}
     - install

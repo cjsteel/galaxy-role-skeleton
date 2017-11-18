@@ -1,9 +1,8 @@
 --- # roles/{{ role_name }}/tests/vagrant.yml
 
-- hosts: localhost    # all
-#  connection: local
-  remote_user: ubuntu # root
-  become: false       # or local directory creation will fail
+- hosts: all
+  remote_user: ubuntu
+  become: false
   gather_facts: true
   pre_tasks:
 
@@ -22,7 +21,8 @@
 {% endraw %}
   vars:
 
-    - clone_remote_user : 'ubuntu'
+    - {{ role_name }}_debug : 'true'
+
     - {{ role_name }}_controller_user: '{{ '{{' }} project_controller_user_home {{ '}}' }}'
     - {{ role_name }}_controller_home: '{{ '{{' }} project_controller_user_home {{ '}}' }}'
 
