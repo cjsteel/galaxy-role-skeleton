@@ -10,7 +10,25 @@ List of internal variables used by the role:
     fact_controller_home
     fact_controller_user
 
-### Detailed usage guide
+### Usage
+
+#### Create role on github or other git server
+
+```shell
+ansible-role-fetch
+```
+
+#### Clone empty role locally
+
+#### Create role using this role
+
+Use the roles short name. for example:
+
+```shell
+fetch
+```
+
+using one of the following methods:
 
 You can replace the default ansble-galaxy role skeleton or point to this one using the ansible-galaxy ROLE_SKELETON option.
 
@@ -39,13 +57,10 @@ git clone git@github.com:cjsteel/galaxy-role-default.git default
 
 ### Authors and license
 
-`galaxy-role-default/default` role was written by:
-
 - [Christopher Steel](http://mcin-cnim.ca/) | [e-mail](mailto:christopher.steel@mcgill.ca)
 
 License: [MIT](https://tldrlegal.com/license/mit-license)
 
-***
 ### Open Science
 
 The Neuro has adopted the principles of Open Science. We are inspired by the likes of the Allen Institute for Brain Science, the National Institutes of Health's Human Connectome project, and the Human Genome project. For additional information please see [open science at the neuro](https://www.mcgill.ca/neuro/open-science-0).
