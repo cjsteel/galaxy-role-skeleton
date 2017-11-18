@@ -6,6 +6,13 @@
     - {{ role_name }}
     - install
 
+- name: "Debug variable values"
+  include: "{{ role_path }}/tasks/debug.yml"
+  when: {{ role_name }}_debug
+  tags:
+    - {{ role_name }}
+    - debug
+
 - name: Run any OS specific tasks
   include: "{{ role_path }}/tasks/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
   tags:
