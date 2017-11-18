@@ -1,13 +1,2 @@
 --- # roles/{{ role_name }}/tasks/debian.yml
 
-- name: Load OS specific variables
-  include_vars: "{{ role_path }}/vars/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
-  tags:
-    - {{ role_name }}
-    - install
-
-- name: Run any OS specific tasks
-  include: "{{ role_path }}/tasks/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
-  tags:
-    - {{ role_name }}
-    - install
