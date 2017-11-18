@@ -6,96 +6,60 @@
 
 ## Description
 
-{{ role_name }} is a customizable alternative to the default role skeleton that is used by the ansible-galaxy command when creating new roles. In other words it is used as a template from which new roles are created when executing the `ansible-galaxy init` command.
+{{ role_name }} is an Ansible role used to  
 
 ## Recommended
 
-We highly recommend running Ansible in a virtual environment for maximum flexibility.
+Running Ansible in a virtual environment allows for a lot of testing flexibility.
 
 * [docs/ansible-setup](docs/ansible-setup.md)
 
-## Usage
+## Requirements
 
-This role can be used to replace the default ansble-galaxy role skeleton or you can point the ansible-galaxy to another location containing this customizable role skeleton using the ansible-galaxy ROLE_SKELETON option. See the following for details:
-
-### To use as an alternative role skeleton
-
-```shell
-ansible-galaxy init --role-skeleton=ALTERNATIVE_ROLE_SKELETON_PATH ansible-role-myrole
-```
-
-### To as a replacment for the default role skeleton that ships with Ansible
-
-If you want to completely replace the default ansible role skeleton directory provided by ansible then you could deleted the default role skeleton directory and replace it with this one.
-
-Here is an example of how you might used the role skeleton with a miniconda created python environment called ansible.
-
-```shell
-# copy the original role skeleton
-mv ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default.org
-# clone this role in order to replace the original you just moved out of the way.
-cd ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/
-git clone git@github.com:cjsteel/galaxy-role-default.git default
-```
+* Ansible
 
 ## Variables
 
+### project_name/{{ role_name }}.yml
+
+* [example_playbook.yml](files/example_playbook.yml)
+
+To install:
+
+```shell
+cd project_directory
+cp roles/{{ role_name }}/files/example_playbook.yml {{ role_name }}.yml
+# edit if required
+nano {{ role_name }}.yml
+```
+
 ### project_name/site.yml
 
-{% raw %}
+* [example_{{ role_name }}.yml](files/example_site.yml)
+
+From the projects main directory run the following:
+
 ```yaml
---- # project_name/site.yml
-
-- hosts: all
-  gather_facts: true
-  pre_tasks:
-
-    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
-    - debug: var=fact_controller_user
-
-    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
-    - debug: var=fact_controller_home
-
-    - set_fact: fact_project_path="{{ lookup('pipe','pwd') }}"
-    - debug: var=fact_project_path
-{% endraw %}
-
-- include: {{ role_name }}.yml
+cp roles/{{ role_name }}/files/example_playbook.yml {{ role_name }}.yml
+cat {{ role_name }}.yml
 ```
 
-### project/group_vars/all/project_defalts.yml
+### project/group_vars/all/project_defaults.yml
+
+[files/group_vars/all/example_defaults.yml](files/group_vars/all/example_defaults.yml)
 
 ```yaml
---- # group_vars/all/project_defaults.yml
-{% raw %}
-project_project_home   : '{{ fact_project_home }}'
-
-project_controller_user: '{{ fact_controller_user }}'
-project_controller_home: '{{ fact_controller_home }}'
-
-project_deployment_user: 'deploy'  # customize for your setup.
-project_deployment_home: '/home/{{ project_deployment_user }}'
-{% endraw %}
+cp roles/{{ role_name }}/files/group_vars/all/example_defaults.yml group_vars/all/project_defaults.yml
+cat group_vars/all/project_defaults.yml
 ```
 
-### project_name/{{ role_name }}
+## Testing
 
-Example content for {{ role_name }}'s main playbook.
+Move into the role directory and run vagrant:
 
-```yaml
---- # file: project_name/{{ role_name }}.yml
-
-- hosts: {{ role_name }}
-  become: false
-  gather_facts: true
-  pre_tasks:
-{% raw %}
-    - set_fact: fact_role_path="{{ lookup('pipe','pwd') }}{% endraw %}/roles/{{ role_name }}"
-    - debug: var=fact_role_path
-
-  roles:
-
-    - {{ role_name }}
+```shell
+cd roles/{{ role_name }}
+vagrant up
 ```
 
 ### Authors and license
@@ -114,4 +78,5 @@ The Neuro has adopted the principles of Open Science. We are inspired by the lik
 ![MCIN](imgs/mcin-logo-brain-140x116.png)          ![neuro](imgs/neuro-logo-160x116.png)  
 
 * Role generated using [galaxy-role-default](https://github.com/cjsteel/galaxy-role-default)
+
 
