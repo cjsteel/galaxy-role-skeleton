@@ -1,6 +1,15 @@
----
+--- roles/{{ role_name }}/menta/main.yml
+dependencies:
 
-dependencies: []
+  - role: ensure_dirs
+    tags: ['minc', 'ensure_dirs']
+    ensure_dirs_on_remote: '{{ '{{' }} {{ role_name }}_dirs_on_remote {{ '}}' }}'
+    ensure_dirs_on_local : '{{ '{{' }} {{ role_name }}_dirs_on_local {{ '}}' }}'
+
+#  - role: skel
+#    become: true
+#    tags: ['minc', 'skel']
+#    skel_entries: '{{ '{{' }} {{ role_name }}_skel_entries {{ '}}' }}'
 
 galaxy_info:
   author: Christopher Steel
@@ -12,8 +21,6 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-#        - precise
-#        - trusty
         - xenial
 #    - name: Debian
 #      versions:

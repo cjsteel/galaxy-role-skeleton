@@ -21,8 +21,8 @@
 {{ role_name }}_package_version  : '2.0.1'
 {{ role_name }}_package_filename : "vagrant_{{ '{{' }} {{ role_name }}_package_version {{ '}}' }}_i686.deb"
 
-{{ role_name }}_controller_resource_dir : '{{ project_deployment_user_home }}/src/sw/vagrant/debs/'
-{{ role_name }}_remote_resource_dir     : '{{ project_deployment_user_home }}/src/sw/vagrant/debs/'
+{{ role_name }}_controller_resource_dir : '{{ project_controller_resources_root }}/vagrant/debs/'
+{{ role_name }}_remote_resource_dir     : '{{ project_deployment_resources_root }}/vagrant/debs/'
 
 # Resource URLs
 
@@ -37,7 +37,7 @@
   {{ role_name }}_local_resources_dir:
 
     state       : 'directory'
-    path        : '{{ '{{' }} {{ role_name }}_controller_home {{ '}}' }}/src/sw/vagrant/debs/'
+    path        : '{{ '{{' }} {{ role_name }}_controller_resource_dir {{ '}}' }}/vagrant/debs/'
     owner       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
     group       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
     mode        : '0755'
@@ -47,7 +47,7 @@
   {{ role_name }}_remote_resource_dir:
 
     state          : 'directory'
-    path           : '{{ '{{' }} {{ role_name }}_deployment_home {{ '}}' }}/src/sw/vagrant/debs/'
+    path           : '{{ '{{' }} {{ role_name }}_deployment_resource_dir {{ '}}' }}/vagrant/debs/'
     owner          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
     group          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
     mode           : '0755'
