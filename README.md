@@ -22,10 +22,10 @@ ansible-role-fetch
 
 #### Create role using this role
 
-Use the roles short name. for example:
+Use the new roles short name. for example:
 
 ```shell
-fetch
+fetch # rather than say ansible-role-fetch
 ```
 
 using one of the following methods:
@@ -35,16 +35,16 @@ You can replace the default ansble-galaxy role skeleton or point to this one usi
 #### To use as an alternative role skeleton
 
 ```shell
-ansible-galaxy init --role-skeleton=ALTERNATIVE_ROLE_SKELETON_PATH ansible-role-myrole
+ansible-galaxy init --role-skeleton=ALTERNATIVE_ROLE_SKELETON_PATH new_role_short_name
 ```
 
-Real world example
+Real world example:
 
 ```shell
 mkdir ~/projects
 cd ~/projects
 git clone git@github.com:cjsteel/galaxy-role-skeleton.git
-ansible-galaxy init --role-skeleton=/home/cjs/projects/galaxy-role-skeleton/skeleton -f ansible-role-download -vvv
+ansible-galaxy init --role-skeleton=/home/cjs/projects/galaxy-role-skeleton/skeleton -f fetch -vvv
 ```
 
 #### Replacing the ansible galaxy default role skeleton
