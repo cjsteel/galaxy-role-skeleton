@@ -5,6 +5,18 @@
 
 This is a drop in replacement role skeleton used to create ansible roles with the ansible-galaxy command.
 
+## Requirements
+
+- Ansible
+
+## Recommended
+
+Running Ansible in a virtual environment allows for a lot of testing flexibility.
+
+* [skeleton/docs/ansible-setup](skeleton/docs/ansible-setup.md)
+
+## Variables
+
 List of internal variables used by the role:
 
     fact_controller_home
@@ -44,7 +56,7 @@ Real world example:
 mkdir ~/projects
 cd ~/projects
 git clone git@github.com:cjsteel/galaxy-role-skeleton.git
-ansible-galaxy init --role-skeleton=/home/cjs/projects/galaxy-role-skeleton/skeleton -f fetch -vvv
+ansible-galaxy init --role-skeleton=~/projects/galaxy-role-skeleton/skeleton -f fetch -vvv
 ```
 
 #### Replacing the ansible galaxy default role skeleton

@@ -1,13 +1,16 @@
 --- # file: project/{{ role_name }}.yml
 
 - hosts: {{ role_name }}
-  become: true
+  become: false
   gather_facts: true
   pre_tasks:
-{% raw %}
+
     - set_fact: fact_role_name="{{ '{{' }} lookup('env','ANSIBLE_ROLE_NAME') {{ '}}' }}"
     - debug: var=fact_role_name
-{% endraw %}
+
+    - set_fact: fact_role_path="{{ '{{' }} lookup('pipe','pwd') {{ '}}' }}/roles/{{ role_name }}"
+    - debug: var=fact_role_path
+
   roles:
 
     - {{ role_name }}
