@@ -1,6 +1,6 @@
-## galaxy-role-default/default
+## galaxy-role-skeleton
 
-[![Travis CI](http://img.shields.io/travis/csteel/ansible-rolegalaxy-role-default/default.svg?style=flat)](http://travis-ci.org/csteel/ansible-rolegalaxy-role-default/default)
+[![Travis CI](http://img.shields.io/travis/csteel/ansible-rolegalaxy-role-skeleton/default.svg?style=flat)](http://travis-ci.org/csteel/ansible-rolegalaxy-role-skeleton/default)
 [![Platforms](http://img.shields.io/badge/platforms-debian%20/%20ubuntu-lightgrey.svg?style=flat)](#)
 
 This is a drop in replacement role skeleton used to create ansible roles with the ansible-galaxy command.
@@ -43,16 +43,16 @@ Real world example
 ```shell
 mkdir ~/projects
 cd ~/projects
-git clone git@github.com:cjsteel/galaxy-role-default.git
-ansible-galaxy init --role-skeleton=/home/cjs/projects/galaxy-role-default/skeleton -f ansible-role-download -vvv
+git clone git@github.com:cjsteel/galaxy-role-skeleton.git
+ansible-galaxy init --role-skeleton=/home/cjs/projects/galaxy-role-skeleton/skeleton -f ansible-role-download -vvv
 ```
 
-#### Replacing the ansible galaxy default role template
+#### Replacing the ansible galaxy default role skeleton
 
 ```shell
 cd ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default
 mv default default.org
-git clone git@github.com:cjsteel/galaxy-role-default.git default
+git clone git@github.com:cjsteel/galaxy-role-skeleton.git default
 ```
 
 ### Authors and license
