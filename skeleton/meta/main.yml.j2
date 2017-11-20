@@ -1,10 +1,12 @@
---- roles/{{ role_name }}/menta/main.yml
-dependencies:
+--- #roles/{{ role_name }}/meta/main.yml
 
-  - role: ensure_dirs
-    tags: ['minc', 'ensure_dirs']
-    ensure_dirs_on_remote: '{{ '{{' }} {{ role_name }}_dirs_on_remote {{ '}}' }}'
-    ensure_dirs_on_local : '{{ '{{' }} {{ role_name }}_dirs_on_local {{ '}}' }}'
+dependencies: []
+#dependencies:
+
+#  - role: ensure_dirs
+#    tags: ['{{ role_name }}', 'ensure_dirs']
+#    ensure_dirs_on_remote: '{{ role_name }}_dirs_on_remote'
+#    ensure_dirs_on_local : '{{ role_name }}_dirs_on_local'
 
 #  - role: skel
 #    become: true
@@ -12,9 +14,9 @@ dependencies:
 #    skel_entries: '{{ '{{' }} {{ role_name }}_skel_entries {{ '}}' }}'
 
 galaxy_info:
-  author: Christopher Steel
+  author: 'Christopher Steel'
   description: '{{ role_name }} is used to...'
-  company: McGill Centre for Integrative Neuroscience
+  company: 'McGill Centre for Integrative Neuroscience'
   license: MIT
   min_ansible_version: '1.7.1'
 
@@ -27,4 +29,10 @@ galaxy_info:
 #        - wheezy
 #        - jessie
 
-  categories: [ansible, role]
+  galaxy_tags:
+    - mcin
+    - {{ role_name }}
+    - package
+    # NOTE: A tag is limited to a single word comprised of
+    # alphanumeric characters. Maximum 20 tags per role.
+

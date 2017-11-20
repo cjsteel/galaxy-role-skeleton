@@ -21,13 +21,32 @@
 {% endraw %}
   vars:
 
+# project_vars usually from group_vars/all/defaults.yml repeated here as not inlcuded in tests
+
+## controller user vars
+
+    - project_controller_user_name      : '{{ '{{' }} fact_controller_user {{ '}}' }}'
+    - project_controller_user_home      : '{{ '{{' }} fact_controller_home {{ '}}' }}'
+    - project_controller_resources_home : '{{ '{{' }} project_controller_user_home {{ '}}' }}'
+
+
+## deployment user vars
+
+    - project_deployment_user_name      : 'ubuntu'
+    - project_deployment_user_home      : '/home/{{ project_deployment_user_name }}'
+    - project_deployment_resources_home : '{{ '{{' }} project_deployment_user_home {{ '}}' }}'
+
+# standard vars start here ####################################################
+
     - {{ role_name }}_debug : 'true'
 
-    - {{ role_name }}_controller_user: '{{ '{{' }} project_controller_user_home {{ '}}' }}'
-    - {{ role_name }}_controller_home: '{{ '{{' }} project_controller_user_home {{ '}}' }}'
+    - {{ role_name }}_controller_user           : '{{ '{{' }} project_controller_user_name {{ '}}' }}'
+    - {{ role_name }}_controller_home           : '{{ '{{' }} project_controller_user_home {{ '}}' }}'
+    - {{ role_name }}_controller_resources_home : '{{ '{{' }} project_controller_resources_home {{ '}}' }}'
 
-    - {{ role_name }}_deployment_user: '{{ '{{' }} project_deployment_user_name {{ '}}' }}'
-    - {{ role_name }}_deployment_home: '{{ '{{' }} project_deployment_user_home {{ '}}' }}'
+    - {{ role_name }}_deployment_user           : '{{ '{{' }} project_deployment_user_name {{ '}}' }}'
+    - {{ role_name }}_deployment_home           : '{{ '{{' }} project_deployment_user_home {{ '}}' }}'
+    - {{ role_name }}_deployment_resources_home : '{{ '{{' }} project_deployment_resources_home {{ '}}' }}'
 
 ## atomic versioning example
 #
@@ -41,8 +60,8 @@
     - {{ role_name }}_package_version : '2.0.1'
     - {{ role_name }}_package_name    : "vagrant_{{ '{{' }} {{ role_name }}_package_version {{ '}}' }}_i686.deb"
 
-    - {{ role_name }}_controller_resource_dir : '{{ project_deployment_user_home }}/src/sw/vagrant/debs/'
-    - {{ role_name }}_remote_resource_dir     : '{{ project_deployment_user_home }}/src/sw/vagrant/debs/'
+    - {{ role_name }}_controller_resources_dir : '{{ '{{' }} {{ role_name }}_controller_resources_home {{ '}}' }}/src/sw/vagrant/debs/'
+    - {{ role_name }}_deployment_resources_dir : '{{ '{{' }} {{ role_name }}_deployment_resources_home {{ '}}' }}/src/sw/vagrant/debs/'
 
 # Resource URLs
 
@@ -57,7 +76,7 @@
         {{ role_name }}_local_resources_dir:
 
           state       : 'directory'
-          path        : '{{ '{{' }} {{ role_name }}_controller_home {{ '}}' }}/src/sw/vagrant/debs/'
+          path        : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}'
           owner       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
           group       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
           mode        : '0755'
@@ -67,7 +86,7 @@
         {{ role_name }}_remote_resource_dir:
 
           state          : 'directory'
-          path           : '{{ '{{' }} {{ role_name }}_deployment_home {{ '}}' }}/src/sw/vagrant/debs/'
+          path           : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
           owner          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
           group          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
           mode           : '0755'
@@ -75,6 +94,5 @@
   roles:
 
     - ../../
-#    - {{ role_name }}
 
 
