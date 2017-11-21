@@ -7,10 +7,12 @@ dependencies:
     ensure_dirs_on_remote: '{{ '{{' }} {{ role_name }}_ensure_dirs_on_remote {{ '}}' }}'
     ensure_dirs_on_local : '{{ '{{' }} {{ role_name }}_ensure_dirs_on_local {{ '}}' }}'
 
-#  - role: skel
-#    become: true
-#    tags: ['minc', 'skel']
-#    skel_entries: '{{ '{{' }} {{ role_name }}_skel_entries {{ '}}' }}'
+  - role: acemenu
+
+  - role: skel
+    become: true
+    tags: ['{{ role_name }}', 'skel']
+    skel_entries: '{{ '{{' }} {{ role_name }}_skel_entries {{ '}}' }}'
 
 galaxy_info:
   author: 'Christopher Steel'

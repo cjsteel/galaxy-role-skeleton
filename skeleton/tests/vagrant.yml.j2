@@ -50,7 +50,7 @@
 
 # Help file
 
-    - {{ role_name }}_acemenu_help_file_template_path: bin/acemenu/help/example_aceadmin_helpfile.md.j2
+    - {{ role_name }}_acemenu_help_file_template_path: '{{ fact_role_path }}/templates/bin/acemenu/help/example_aceadmin_helpfile.md.j2'
 
 ## atomic versioning example
 #
@@ -79,6 +79,7 @@
     - {{ role_name }}_ensure_dirs_on_remote:
 
         {{ role_name }}_remote_dir_01:
+
           state       : "directory"
           path        : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
           owner       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
@@ -114,6 +115,14 @@
           group       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
           mode        : "0755"
           recursive   : True
+
+    - fetch_skel_entries:
+
+        - name : "ensure for acemenu help file for fetch"
+          src:  '{{ fetch_acemenu_help_file_template_path }}'
+          path : '/etc/skel/bin/acemenu/help/fetch.md'
+          force : no
+          state: 'copy'
 
   roles:
 
