@@ -33,7 +33,7 @@
 ## deployment user vars
 
     - project_deployment_user_name      : 'ubuntu'
-    - project_deployment_user_home      : '/home/{{ project_deployment_user_name }}'
+    - project_deployment_user_home      : '/home/{{ '{{' }} project_deployment_user_name {{ '}}' }}'
     - project_deployment_resources_home : '{{ '{{' }} project_deployment_user_home {{ '}}' }}'
 
 # standard vars start here ####################################################
@@ -48,6 +48,10 @@
     - {{ role_name }}_deployment_home           : '{{ '{{' }} project_deployment_user_home {{ '}}' }}'
     - {{ role_name }}_deployment_resources_home : '{{ '{{' }} project_deployment_resources_home {{ '}}' }}'
 
+# Help file
+
+    - {{ role_name }}_acemenu_help_file_template_path: bin/acemenu/help/example_aceadmin_helpfile.md.j2
+
 ## atomic versioning example
 #
 #    - {{ role_name }}_major             : '0'
@@ -60,8 +64,8 @@
     - {{ role_name }}_package_version : '2.0.1'
     - {{ role_name }}_package_name    : "vagrant_{{ '{{' }} {{ role_name }}_package_version {{ '}}' }}_i686.deb"
 
-    - {{ role_name }}_controller_resources_dir : '{{ '{{' }} {{ role_name }}_controller_resources_home {{ '}}' }}/src/sw/vagrant/debs/'
-    - {{ role_name }}_deployment_resources_dir : '{{ '{{' }} {{ role_name }}_deployment_resources_home {{ '}}' }}/src/sw/vagrant/debs/'
+    - {{ role_name }}_controller_resources_dir : '{{ '{{' }} {{ role_name }}_controller_resources_home {{ '}}' }}/src/sw/vagrant/debs'
+    - {{ role_name }}_deployment_resources_dir : '{{ '{{' }} {{ role_name }}_deployment_resources_home {{ '}}' }}/src/sw/vagrant/debs'
 
 # Resource URLs
 
@@ -69,30 +73,49 @@
 #    - {{ role_name }}_checksum_url     : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS"
 #    - {{ role_name }}_checksum_sig_url : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS.sig"
 
+
 # Directories
 
-    - {{ role_name }}_dirs_on_local:
+    - {{ role_name }}_ensure_dirs_on_remote:
 
-        {{ role_name }}_local_resources_dir:
-
-          state       : 'directory'
-          path        : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}'
-          owner       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
-          group       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+        {{ role_name }}_remote_dir_01:
+          state       : "directory"
+          path        : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
+          owner       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          group       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
           mode        : '0755'
+          recursive   : True
 
-    - {{ role_name }}_dirs_on_remote:
+        {{ role_name }}_remote_dir_02:
 
-        {{ role_name }}_remote_resource_dir:
+          state       : "absent"
+          path        : "ensure_dirs_test_2"
+          owner       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          group       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          mode        : "0755"
 
-          state          : 'directory'
-          path           : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
-          owner          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
-          group          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
-          mode           : '0755'
+# ensure_dirs_on_local: []
+
+    - {{ role_name }}_ensure_dirs_on_local:
+
+        {{ role_name }}_local_dir_001:
+
+          state       : "absent"
+          path        : "ensure_dirs_test_3"
+          owner       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          group       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          mode        : "0755"
+
+        {{ role_name }}_local_dir_002:
+
+          state       : "directory"
+          path        : "{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}"
+          owner       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          group       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          mode        : "0755"
+          recursive   : True
 
   roles:
 
     - ../../
-
 

@@ -1,12 +1,11 @@
 --- #roles/{{ role_name }}/meta/main.yml
 
-dependencies: []
-#dependencies:
+dependencies:
 
-#  - role: ensure_dirs
-#    tags: ['{{ role_name }}', 'ensure_dirs']
-#    ensure_dirs_on_remote: '{{ role_name }}_dirs_on_remote'
-#    ensure_dirs_on_local : '{{ role_name }}_dirs_on_local'
+  - role: ensure_dirs
+    tags: ['{{ role_name }}', 'ensure_dirs']
+    ensure_dirs_on_remote: '{{ '{{' }} {{ role_name }}_ensure_dirs_on_remote {{ '}}' }}'
+    ensure_dirs_on_local : '{{ '{{' }} {{ role_name }}_ensure_dirs_on_local {{ '}}' }}'
 
 #  - role: skel
 #    become: true
