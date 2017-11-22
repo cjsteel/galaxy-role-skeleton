@@ -103,5 +103,12 @@ ansible 2.3.2.0
   configured module search path = Default w/o overrides
 ```
 
-That's it...
+## ssh keypair generation
+
+## ssh-agent setup
+
+```shell
+eval `/usr/bin/ssh-agent -s`
+/usr/bin/ssh-add
+```
 
