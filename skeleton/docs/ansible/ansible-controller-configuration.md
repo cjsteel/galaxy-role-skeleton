@@ -21,7 +21,9 @@
 
 We recommend installing Ansible into a virtual environment. Here we document how to do this using something called **miniconda**.
 
+### miniconda
 
+* [../miniconda/installing-miniconda.md](../miniconda/installing-miniconda.md)
 
 ## RecommendAnsible configuration
 
