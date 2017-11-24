@@ -2,7 +2,7 @@
 
 ## ansible-controller-configuration.md
 
-* [docs/ansible-controller-configuration.md](docs/ansible-controller-configuration.md)
+* [ansible/ansible-controller-configuration.md](ansible//ansible-controller-configuration.md)
 
 ### Project directory structure
 
