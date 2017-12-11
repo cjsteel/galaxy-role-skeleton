@@ -29,13 +29,32 @@ wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
 bash ./Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/miniconda
 ```
 
+### usage
+
+./Miniconda2-latest-Linux-x86_64.sh [options]
+
+Installs Miniconda2 4.3.30
+
+-b           run install in batch mode (without manual intervention), it is expected the license terms are agreed upon.
+-f           no error if install prefix already exists
+-h           print this help message and exit
+-p PREFIX    install prefix, defaults to /home/users/csteel/miniconda2, must not contain spaces.
+-s           skip running pre/post-link/install scripts
+-u           update an existing installation
+-t           run package tests after installation (may install conda-build)
+
 ### Export the miniconda path
 
-Although the installation will add the miniconda path to your ~/.bashrc file this will not take effect unless you start a new terminal session. To use miniconda from your current terminal session you will need to add the miniconda path to your path by running something like the following in your terminal session.
+To use miniconda from your current terminal session you will need to add the miniconda path to your path by running something like the following in your terminal session.
 
 ```shell
 export PATH="$HOME/miniconda/bin:$PATH"
 ```
+
+Adding to your path
+```shell
+PATH="$HOME/miniconda/bin:$PATH"
+
 
 ## Testing
 

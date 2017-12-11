@@ -37,6 +37,7 @@ yolk -V ansible
 Output example
 
 ```shell
+ansible 2.4.2.0
 ansible 2.4.1.0
 ansible 2.4.0.0
 ansible 2.3.2.0
@@ -71,13 +72,13 @@ Make a note of the version you want to install
 Here we create a virtual environment called **ansible-2.3** that will include python2.x
 
 ```shell
-conda create -y -n ansible-2.3 python=2
+conda create -y -n ansible-2.4 python=2
 ```
 
 ### activate the target virtual environment
 
 ```shell
-source activate ansible-2.3
+source activate ansible-2.4
 ```
 
 ### Confirm active virtual environment
@@ -91,7 +92,7 @@ Confirm that the environment is active by verifying that the virtual environment
 Alternativly you can use the commend `which python` and confirm that the path returned is located in your target virtual environment:
 
 ```shell
-/home/cjs/miniconda2/envs/ansible-2.3/bin/python
+/home/cjs/miniconda2/envs/ansible-2.4/bin/python
 ```
 
 ### Install the latest iteration of your target ansible version
@@ -99,7 +100,7 @@ Alternativly you can use the commend `which python` and confirm that the path re
 If you want ansible 2.3 you probably the latest revision, 2.3.2.0. The following will install ansible as well as any dependancies.
 
 ```shell
-pip install 'ansible==2.3.2.0' 
+pip install 'ansible==2.4.2.0'
 ```
 
 Installation confirmation
@@ -111,7 +112,7 @@ which ansible
 Output example
 
 ```shell
-/home/cjs/miniconda2/envs/ansible-2.3/bin/ansible
+/home/cjs/miniconda2/envs/ansible-2.4/bin/ansible
 ```
 
 Version confirmation
