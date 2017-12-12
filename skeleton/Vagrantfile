@@ -1,68 +1,34 @@
 # -*- mode: ruby -*-
-# vi: set ft=ruby ts=2 sw=2 tw=0 et :
+# vi: set ft=ruby :
 
-role = File.basename(File.expand_path(File.dirname(__FILE__)))
+Vagrant.configure(2) do |config|
 
-boxes = [
-#  {
-#    :name => "ubuntu-1204",
-#    :box => "bento/ubuntu-12.04",
-#    :ip => '10.0.0.11',
-#    :cpu => "50",
-#    :ram => "256"
-#  },
-#  {
-#    :name => "ubuntu-1404",
-#    :box => "bento/ubuntu-14.04",
-#    :ip => '10.0.0.12',
-#    :cpu => "50",
-#    :ram => "256"
-#  },
-  {
-    :name => "ubuntu-1604",
-    :box => "ubuntu/xenial64",
-#    :box => "bento/ubuntu-16.04",
-    :ip => '10.0.0.13',
-    :cpu => "50",
-    :ram => "256"
-  },
-#  {
-#    :name => "debian-711",
-#    :box => "bento/debian-7.11",
-#    :ip => '10.0.0.14',
-#    :cpu => "50",
-#    :ram => "256"
-#  },
-#  {
-#    :name => "debian-86",
-#    :box => "bento/debian-8.6",
-#    :ip => '10.0.0.15',
-#    :cpu => "50",
-#    :ram => "256"
-#  },
-]
+#  config.vm.define "jessie" do |jessie|
+#    jessie.vm.box = "debian/jessie64"
+#  end
 
-Vagrant.configure("2") do |config|
-  boxes.each do |box|
-    config.vm.define box[:name] do |vms|
-      vms.vm.box = box[:box]
-      vms.vm.hostname = "ansible-#{role}-#{box[:name]}"
-#      vms.vm.synced_folder ".vagrant/synced", "/home/vagrant"
-      vms.vm.provider "virtualbox" do |v|
-        v.customize ["modifyvm", :id, "--cpuexecutioncap", box[:cpu]]
-        v.customize ["modifyvm", :id, "--memory", box[:ram]]
-      end
+#  config.vm.define "precise" do |precise|
+#    precise.vm.box = "ubuntu/precise64"
+#  end
 
-      vms.vm.network :private_network, ip: box[:ip]
+#  config.vm.define "trusty" do |trusty|
+#    trusty.vm.box = "ubuntu/trusty64"
+#  end
 
-      vms.vm.provision "shell",
-        inline: "sudo apt-get update && sudo apt-get install -y python"
-
-
-      vms.vm.provision :ansible do |ansible|
-        ansible.playbook = "tests/vagrant.yml"
-        ansible.verbose = "vv"
-      end
-    end
+  config.vm.define "xenial" do |xenial|
+    xenial.vm.box = "ubuntu/xenial64"
   end
+
+#  config.vm.define "centos7" do |centos7|
+#    centos7.vm.box = "centos/7"
+#  end
+
+#  config.vm.define "fedora22" do |fedora22|
+#    fedora22.vm.box = "box-cutter/fedora22"
+#  end
+
+  config.vm.provision "ansible" do |ansible|
+      ansible.playbook = 'tests/test.yml'
+  end
+  config.vm.synced_folder ".", "/vagrant", disabled: true
 end

@@ -116,7 +116,7 @@
           mode        : "0755"
           recursive   : True
 
-    - fetch_skel_entries:
+    - {{ role_name }}_skel_entries:
 
         - name : "ensure for acemenu help file for fetch"
           src:  '{{ fetch_acemenu_help_file_template_path }}'
