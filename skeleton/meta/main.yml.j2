@@ -2,17 +2,11 @@
 
 dependencies:
 
-  - role: ensure_dirs
-    tags: ['{{ role_name }}', 'ensure_dirs']
-    ensure_dirs_on_remote: '{{ '{{' }} {{ role_name }}_ensure_dirs_on_remote {{ '}}' }}'
-    ensure_dirs_on_local : '{{ '{{' }} {{ role_name }}_ensure_dirs_on_local {{ '}}' }}'
+  - role: cjsteel.resources
+    resources_on_local : '{{ '{{' }} {{ role_name }}_resources_on_local {{ '}}' }}'
+    resources_on_remote: '{{ '{{' }} {{ role_name }}_resources_on_remote {{ '}}' }}'
 
-  - role: acemenu
-
-  - role: skel
-    become: true
-    tags: ['{{ role_name }}', 'skel']
-    skel_entries: '{{ '{{' }} {{ role_name }}_skel_entries {{ '}}' }}'
+#  - role: acemenu
 
 galaxy_info:
   author: 'Christopher Steel'
@@ -25,10 +19,6 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - xenial
-#    - name: Debian
-#      versions:
-#        - wheezy
-#        - jessie
 
   galaxy_tags:
     - mcin

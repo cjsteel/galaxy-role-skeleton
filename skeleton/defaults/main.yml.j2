@@ -24,12 +24,15 @@
 {{ role_name }}_package_version  : '2.0.1'
 {{ role_name }}_package_filename : "vagrant_{{ '{{' }} {{ role_name }}_package_version {{ '}}' }}_i686.deb"
 
-{{ role_name }}_controller_resources_dir : '{{ '{{' }} {{ role_name }}_controller_resources_home {{ '}}' }}/vagrant/debs/'
-{{ role_name }}_deployment_resources_dir : '{{ '{{' }} {{ role_name }}_deployment_resources_home {{ '}}' }}/vagrant/debs/'
+{{ role_name }}_controller_resources_dir : '{{ '{{' }} {{ role_name }}_controller_resources_root {{ '}}' }}/sw/vagrant/debs'
+{{ role_name }}_deployment_resources_dir : '{{ '{{' }} {{ role_name }}_deployment_resources_root {{ '}}' }}/vagrant/debs'
+
+# /tests/sw/{{ '{{' }} ansible_distribution| lower {{ '}}' }}/{{ '{{' }} ansible_distribution_version {{ '}}' }}/miniconda'
+# /tests/sw/{{ '{{' }} ansible_distribution| lower {{ '}}' }}/{{ '{{' }} ansible_distribution_version {{ '}}' }}/miniconda'
 
 # Help file
 
-{{ role_name }}_acemenu_help_file_template_path: '{{ fact_role_path }}/templates/bin/acemenu/help/example_aceadmin_helpfile.md.j2'
+{{ role_name }}_acemenu_help_file_template_path: '{{ '{{' }} fact_role_path {{ '}}' }}/templates/bin/acemenu/help/example_aceadmin_helpfile.md.j2'
 
 # Resource URLs
 
@@ -37,10 +40,13 @@
 #{{ role_name }}_checksum_url     : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS"
 #{{ role_name }}_checksum_sig_url : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS.sig"
 
-# Directories
-{{ role_name }}_dirs_on_local:
+########################################
 
-  {{ role_name }}_local_resources_dir:
+# Resources
+
+{{ role_name }}_resources_on_local:
+
+  {{ role_name }}_local_directories:
 
     state       : 'directory'
     path        : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}'
@@ -48,20 +54,182 @@
     group       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
     mode        : '0755'
 
-{{ role_name }}_dirs_on_remote:
+  {{ role_name }}_local_clones:
 
-  {{ role_name }}_remote_resource_dir:
+    become: '{{ resources_controller_user }}'
+    repo  : 'https://github.com/cjsteel/script-bash-acemenu.git'
+    dest  : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/acemenu'
+    mode  : '0700'
+    clone : yes
 
-    state          : 'directory'
-    path           : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
-    owner          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
-    group          : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
-    mode           : '0755'
+  {{ role_name }}_local_downloads:
 
-{{ role_name }}_skel_entries:
+    url           : 'https://repo.continuum.io/miniconda/Miniconda2-4.3.30-Linux-x86_64.sh'
+    dest          : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/Miniconda2-latest-Linux-x86_64.sh'
+    owner         : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    group         : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    mode          : '0700'
+    checksum      : 'md5:bd1655b4b313f7b2a1f2e15b7b925d03'
+    resource_type : 'url'
 
-  - name : "ensure for acemenu help file for {{ role_name }}"
-    src:  '{{ '{{' }} {{ role_name }}_acemenu_help_file_template_path {{ '}}' }}'
-    path : '/etc/skel/bin/acemenu/help/{{ role_name }}.md'
-    force : no
-    state: 'copy'
+  {{ role_name }}_local_file_copies:
+
+    state : "copy" 
+    src   : './files/example_playbook.yml'
+    dest  : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/copy_test.yml'
+    owner : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    group : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    mode  : '0700'
+
+  {{ role_name }}_local_file_touches:
+
+    state : 'touch' 
+    path  : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/copy_test.yml'
+    owner : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    group : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    mode  : '0770'
+
+  {{ role_name }}_local_templated_files:
+
+
+    state: 'template'
+    src  : './templates/template_test.md.j2'
+    dest : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/test.md'
+    owner: '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    group: '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    mode : '0700'
+
+  {{ role_name }}_local_blocksinfile:
+
+    type : 'blockinfile'    
+    path : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/test.md'
+    owner: '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    group: '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    mode : '0700'
+    insertafter: "EOF"
+    block: |
+      # if running bash
+      if [ -n "$BASH_VERSION" ]; then
+          # include /opt/display/bin/display if it exists
+          if [ -f "/opt/display/bin/display" ]; then
+              PATH="/opt/display/bin:$PATH"
+
+       	. "/opt/display/bin/"
+          fi
+      fi
+    state: "present"
+
+  {{ role_name }}_local_standard_sym_links:
+
+    state: "link"
+    src  : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/test.md'
+    dest : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}/my_local_link'
+    owner: '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    group: '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+    mode : '0700'
+    force: ''{{ '{{' }} {{ role_name }}_default_link_force {{ '}}' }}'
+
+  {{ role_name }}_local_relative_sym_links:
+
+    link_name   : 'relative_link'
+    link_target : 'test.md'
+    link_dir    : '{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}'
+    state: 'relative_link'
+#    owner       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+#    group       : '{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}'
+#    mode: '0700'
+
+{{ role_name }}_resources_on_remote:
+
+  {{ role_name }}_remote_directories:
+
+    state : 'directory'
+    path  : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
+    owner : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode  : '0755'
+
+  {{ role_name }}_remote_clones:
+
+    become: true
+    repo  : 'https://github.com/cjsteel/script-bash-acemenu.git'
+    dest  : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/acemenu'
+    mode  : '0700'
+    clone : yes
+
+  {{ role_name }}_remote_downloads:
+
+    url           : 'https://repo.continuum.io/miniconda/Miniconda2-4.3.30-Linux-x86_64.sh'
+    dest          : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/Miniconda2-latest-Linux-x86_64.sh'
+    owner         : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group         : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode          : '0700'
+    checksum      : 'md5:bd1655b4b313f7b2a1f2e15b7b925d03'
+    resource_type : 'url'
+
+  {{ role_name }}_remote_file_copies:
+
+    state : "copy" 
+    src   : './files/example_playbook.yml'
+    dest  : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/copy_test.yml'
+    owner : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode  : '0700'
+
+  {{ role_name }}_remote_file_touches:
+
+    state : 'touch' 
+    path  : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/copy_test.yml'
+    owner : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode  : '0770'
+
+  {{ role_name }}_remote_templates_files:
+
+    state: 'template'
+    src  : './templates/template_test.md.j2'
+    dest : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/test.md'
+    owner: '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group: '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode : '0700'
+
+  {{ role_name }}_remote_blocksinfile:
+
+    type : 'blockinfile'    
+    path : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/test.md'
+    owner: '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group: '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode : '0700'
+    insertafter: "EOF"
+    block: |
+      # if running bash
+      if [ -n "$BASH_VERSION" ]; then
+          # include /opt/display/bin/display if it exists
+          if [ -f "/opt/display/bin/display" ]; then
+              PATH="/opt/display/bin:$PATH"
+
+       	. "/opt/display/bin/"
+          fi
+      fi
+    state: "present"
+
+  {{ role_name }}_remote_standard_sym_links:
+
+    state: 'link'
+    src  : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/test.md'
+    dest : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}/my_remote_link'
+    owner: '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group: '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode : '0700'
+    force: '{{ resources_default_link_force }}'
+
+  {{ role_name }}_remote_relative_sym_links:
+
+    state       : 'relative_link'
+    link_dir    : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
+    link_name   : 'my_relative_link'
+    link_target : 'test.md'
+    owner       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    group       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+    mode        : '0700'
+

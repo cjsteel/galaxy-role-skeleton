@@ -19,28 +19,62 @@
 #    - debug: var=fact_role_name2
 {% endraw %}
 
-  - set_fact: ansible_user='ubuntu'
-  - name: "Ensure that our target has python2.x for Ansible gather facts (Sometimes Ubuntu 16.04 does not)"
-    raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
-    register: output
-    changed_when:
-    - output.stdout != ""
-    - output.stdout != "\r\n"
-    ignore_errors: yes
+#    - set_fact: ansible_user='ubuntu'
+
+    - name: "Ensure that our target has python2.x for Ansible gather facts (Sometimes Ubuntu 16.04 does not)"
+      raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
+      register: output
+      changed_when:
+       - output.stdout != ""
+       - output.stdout != "\r\n"
+      ignore_errors: yes
 
 
-  - name: "Now that we are sure Python 2.7 is installed we can gather our facts"
-    setup:
+    - name: "Now that we are sure Python 2.7 is installed we can gather our facts"
+      setup:
 
+  vars:
+
+## controller user vars
+{% raw %}
+    - project_controller_user_name      : '{{ fact_controller_user }}'
+    - project_controller_user_home      : '{{ fact_controller_home }}'
+    - project_controller_resources_home : '{{ project_controller_user_home }}'
+
+
+## deployment user vars
+
+    - project_deployment_user_name      : 'ubuntu'
+    - project_deployment_user_home      : '/home/{{ project_deployment_user_name }}'
+    - project_deployment_resources_home : '{{ project_deployment_user_home }}'
+{% endraw %}
+
+# Role dependencies
   roles:
 
 #    - epel
-    - haveged
-    - { role: gpg, ansible_user: ubuntu }
+#    - haveged
+#    - { role: gpg, ansible_user: ubuntu }
 
 - hosts: all
   become: false
   gather_facts: true
+  vars:
+
+## controller user vars
+{% raw %}
+    - project_controller_user_name      : '{{ fact_controller_user }}'
+    - project_controller_user_home      : '{{ fact_controller_home }}'
+    - project_controller_resources_home : '{{ project_controller_user_home }}'
+
+
+## deployment user vars
+
+    - project_deployment_user_name      : 'ubuntu'
+    - project_deployment_user_home      : '/home/{{ project_deployment_user_name }}'
+    - project_deployment_resources_home : '{{ project_deployment_user_home }}'
+{% endraw %}
+
   roles:
 
     - {{ role_name }}
