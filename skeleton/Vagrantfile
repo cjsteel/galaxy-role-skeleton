@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
 #  end
 
   config.vm.provision "ansible" do |ansible|
-      ansible.playbook = 'tests/test.yml'
+      ansible.playbook = 'tests/vagrant.yml'
   end
   config.vm.synced_folder ".", "/vagrant", disabled: true
 end
