@@ -1,6 +1,8 @@
 # docs/ansible/installing-ansible-into-a-conda-created-virtual-environment.md
 
+## IMPORTANT
 
+Installing into a Conda environment may require some manual tweaking in order to allow all Ansible modules to work.
 
 ## Determine available versions
 
