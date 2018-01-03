@@ -4,18 +4,25 @@
 
 Installing into a Conda environment may require some manual tweaking in order to allow all Ansible modules to work.
 
-## Determine available versions
+### Install via anaconda channel
+
+```
+conda create --name ansible -c kbroughton ansible=2.0.0.2
+source activate ansible
+```
+
+### Install using miniconda and pip
 
 Before creating your Ansible environment you might want to determine which versions of Ansible are available for installation using `pip`.
 
-### Install yolk3k
+#### Install yolk3k
 
 ```shell
 pip install yolk3k
 yolk -V ansible
 ```
 
-### list available versions of Ansible
+### list currently available versions of Ansible via pip
 
 Running the following `yolk3k` command will give you a list of all of the installable versions of Ansible available to `pip`:
 
