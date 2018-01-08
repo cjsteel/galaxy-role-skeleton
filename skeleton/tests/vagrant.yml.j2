@@ -12,11 +12,17 @@
     - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
     - debug: var=fact_controller_home
 
+    - set_fact: fact_projects_parent="{{ lookup('pipe','cd ../../../ && pwd')|dirname }}"
+    - debug: var=fact_projects_parent
+
+    - set_fact: fact_project_path="{{ lookup('pipe','cd ../../ && pwd')|dirname }}"
+    - debug: var=fact_project_path
+
     - set_fact: fact_role_path="{{ lookup('pipe','pwd')|dirname }}"
     - debug: var=fact_role_path
 
-#    - set_fact: fact_role_name="{{ lookup('pipe','pwd')|dirname|basename }}"
-#    - debug: var=fact_role_name2
+    - set_fact: fact_role_name="{{ lookup('pipe','pwd')|dirname|basename }}"
+    - debug: var=fact_role_name
 {% endraw %}
 
     - name: "Ensure that our target has python2.x for Ansible gather facts as some Ubuntu 16.04 vagrant boxes do not)"
