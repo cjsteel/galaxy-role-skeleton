@@ -1,0 +1,171 @@
+--- # roles/{{ role_name }}/tests/vagrant.yml
+
+- hosts: all
+  become: true
+  gather_facts: false
+  pre_tasks:
+
+{% raw %}
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
+
+    - set_fact: fact_projects_parent="{{ lookup('pipe','cd ../../../ && pwd')|dirname }}"
+    - debug: var=fact_projects_parent
+
+    - set_fact: fact_project_path="{{ lookup('pipe','cd ../../ && pwd')|dirname }}"
+    - debug: var=fact_project_path
+
+    - set_fact: fact_role_path="{{ lookup('pipe','pwd')|dirname }}"
+    - debug: var=fact_role_path
+
+    - set_fact: fact_role_name="{{ lookup('pipe','pwd')|dirname|basename }}"
+    - debug: var=fact_role_name
+{% endraw %}
+
+    - name: "Ensure that our target has python2.x for Ansible gather facts as some Ubuntu 16.04 vagrant boxes do not)"
+      become_user: root
+      raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
+      register: output
+      changed_when:
+       - output.stdout != ""
+       - output.stdout != "\r\n"
+      ignore_errors: yes
+
+    - name: "Now that we are sure Python 2.7 is installed we can gather our facts"
+      setup:
+
+- hosts: all
+  become: true
+  gather_facts: true
+  vars:
+
+# project_vars usually from group_vars/all/defaults.yml repeated here as not inlcuded in tests
+
+## controller user vars
+
+    - project_controller_user      : '{{ '{{' }} fact_controller_user {{ '}}' }}'
+    - project_controller_home      : '{{ '{{' }} fact_controller_home {{ '}}' }}'
+    - project_controller_resources_home : '{{ '{{' }} project_controller_user_home {{ '}}' }}'
+
+    - {{ role_name }}_controller_user           : '{{ '{{' }} project_controller_user {{ '}}' }}'
+    - {{ role_name }}_controller_home           : '{{ '{{' }} project_controller_home {{ '}}' }}'
+    - {{ role_name }}_controller_resources_root : '{{ '{{' }} {{ role_name }}_controller_home {{ '}}' }}/sw\
+/{{ '{{' }} ansible_distribution| lower {{ '}}' }}/{{ '{{' }} ansible_distribution_version {{ '}}' }}/{{ role_name }}'
+
+## deployment user vars
+
+    - project_deployment_user      : 'ubuntu'
+    - project_deployment_home      : '/home/{{ '{{' }} project_deployment_user_name {{ '}}' }}'
+    - project_deployment_resources_home : '{{ '{{' }} project_deployment_user_home {{ '}}' }}'
+
+    - {{ role_name }}_deployment_user           : '{{ '{{' }} project_deployment_user {{ '}}' }}'
+    - {{ role_name }}_deployment_home           : '{{ '{{' }} project_deployment_home {{ '}}' }}'
+# Change following to large slow drive?
+    - {{ role_name }}_deployment_resources_root : '{{ '{{' }} {{ role_name }}_deployment_home {{ '}}' }}/sw\
+/{{ '{{' }} ansible_distribution| lower {{ '}}' }}/{{ '{{' }} ansible_distribution_version {{ '}}' }}/{{ role_name }}'
+
+# additional testing vars
+
+# create password with:
+# python -c 'import crypt; print crypt.crypt("2017Fido", "$1$SomeSalt$")'
+
+    - myrepos_debug: true
+    - myrepos_deployment_testing: true
+
+    - users:
+      - username: marcus
+        name: Marcus Tester
+        groups: ['users','systemd-journal']
+        uid: 2250
+        home: '/home/marcus'
+#        password: $1$SomeSalt$CFO2yYeZ2AUXwy56eXFqB/
+        shell: '/bin/bash'
+
+# standard vars start here ####################################################
+
+    - {{ role_name }}_debug : 'true'
+    - {{ role_name }}_deployment_testing : 'true'
+
+# Help file
+
+    - {{ role_name }}_acemenu_help_file_template_path: '{{ fact_role_path }}/templates/bin/acemenu/help/example_aceadmin_helpfile.md.j2'
+
+## atomic versioning example
+#
+#    - {{ role_name }}_major             : '0'
+#    - {{ role_name }}_moderate_revision : '0'
+#    - {{ role_name }}_minor_revision    : '1'
+#    - {{ role_name }}_build             : ''
+
+## Package
+    - {{ role_name }}_package_state   : 'present'
+    - {{ role_name }}_package_version : '2.0.1'
+    - {{ role_name }}_package_name    : "vagrant_{{ '{{' }} {{ role_name }}_package_version {{ '}}' }}_i686.deb"
+
+    - {{ role_name }}_controller_resources_dir : '{{ '{{' }} {{ role_name }}_controller_resources_home {{ '}}' }}/src/sw/vagrant/debs'
+    - {{ role_name }}_deployment_resources_dir : '{{ '{{' }} {{ role_name }}_deployment_resources_home {{ '}}' }}/src/sw/vagrant/debs'
+
+# Resource URLs
+
+    - {{ role_name }}_package_url      : "https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_i686.deb"
+#    - {{ role_name }}_checksum_url     : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS"
+#    - {{ role_name }}_checksum_sig_url : "https://releases.hashicorp.com/vagrant/2.0.1/ vagrant_2.0.1_SHA256SUMS.sig"
+
+
+# Directories
+
+    - {{ role_name }}_ensure_dirs_on_remote:
+
+        {{ role_name }}_remote_dir_01:
+
+          state       : "directory"
+          path        : '{{ '{{' }} {{ role_name }}_deployment_resources_dir {{ '}}' }}'
+          owner       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          group       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          mode        : '0755'
+          recursive   : True
+
+        {{ role_name }}_remote_dir_02:
+
+          state       : "absent"
+          path        : "ensure_dirs_test_2"
+          owner       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          group       : '{{ '{{' }} {{ role_name }}_deployment_user {{ '}}' }}'
+          mode        : "0755"
+
+# ensure_dirs_on_local: []
+
+    - {{ role_name }}_ensure_dirs_on_local:
+
+        {{ role_name }}_local_dir_001:
+
+          state       : "absent"
+          path        : "ensure_dirs_test_3"
+          owner       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          group       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          mode        : "0755"
+
+        {{ role_name }}_local_dir_002:
+
+          state       : "directory"
+          path        : "{{ '{{' }} {{ role_name }}_controller_resources_dir {{ '}}' }}"
+          owner       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          group       : "{{ '{{' }} {{ role_name }}_controller_user {{ '}}' }}"
+          mode        : "0755"
+          recursive   : True
+
+    - {{ role_name }}_skel_entries:
+
+        - name : "ensure for acemenu help file for fetch"
+          src:  '{{ fetch_acemenu_help_file_template_path }}'
+          path : '/etc/skel/bin/acemenu/help/fetch.md'
+          force : no
+          state: 'copy'
+
+  roles:
+
+    - ../../
+
