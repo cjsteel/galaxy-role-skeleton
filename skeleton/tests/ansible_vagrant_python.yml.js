@@ -40,5 +40,3 @@
 
 - name: "Now that we are sure Python is installed on all hosts we can gather our facts"
   setup:
-
-

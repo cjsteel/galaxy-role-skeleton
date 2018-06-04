@@ -1,53 +1,29 @@
 ---
-sudo: required
-dist: xenial
 language: python
-python:
-  - "2.7"
-services:
-  - docker
-env:
-  global:
-    - PATH="/usr/bin:$PATH"
+python: "2.7"
 
-before_install:
-    # Ansible doesn't play well with virtualenv
-  - deactivate
-  - sudo apt-get update -qq
-  - sudo apt-get install -y -o Dpkg::Options::="--force-confnew" docker-ce
+# Use the new container infrastructure
+sudo: false
 
-install:
-  - sudo pip install docker-py
-    # software-properties-common for ubuntu 14.04
-    # python-software-properties for ubuntu 12.04
-  - sudo apt-get install -y sshpass software-properties-common python-software-properties
-  - sudo apt-add-repository -y ppa:ansible/ansible
-  - sudo apt-get update -qq
-  - sudo apt-get install -y ansible
-  - sudo rm /usr/bin/python && sudo ln -s /usr/bin/python2.7 /usr/bin/python
-  # install
-  - ansible-galaxy install -r tests/requirements.yml -p tests/roles/
-
-script:
-  - >
-    sudo ansible all -i "127.0.0.1," -m
-    lineinfile -a "regexp=^#host_key_checking dest=/etc/ansible/ansible.cfg line='host_key_checking = False'" -c local
-
-  # Check the role/playbook's syntax.
-  - ansible-playbook -i tests/inventory tests/travis.yml --syntax-check
-
-  # Run the role/playbook with ansible-playbook.
-  - >
-    ansible-playbook -i tests/inventory tests/travis.yml
-    --connection=local --become
-
-  # Run the role/playbook again, checking to make sure it's idempotent.
-  - >
-    ansible-playbook -i tests/inventory tests/travis.yml --connection=local --become
-    | grep -q 'changed=8.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
+# Install ansible
+addons:
+  apt:
+    packages:
+    - python-pip
 
 notifications:
-  # notify ansible galaxy of test results
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+
+install:
+  # Install Ansible.
+  - pip install ansible
+
+  # Check ansible version
+  - ansible --version
+
+  # Create ansible.cfg with correct roles_path
+  - printf '[defaults]\nroles_path=../' >ansible.cfg
+
+script:
+  # Check the role/playbook's syntax.
+- ansible-playbook tests/travis_test.yml -i tests/travis_inventory --syntax-check
