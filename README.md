@@ -3,11 +3,12 @@
 [![Travis CI](http://img.shields.io/travis/csteel/ansible-rolegalaxy-role-skeleton/default.svg?style=flat)](http://travis-ci.org/csteel/ansible-rolegalaxy-role-skeleton/default)
 [![Platforms](http://img.shields.io/badge/platforms-debian%20/%20ubuntu-lightgrey.svg?style=flat)](#)
 
-This is a drop in replacement role skeleton used to create ansible roles with the ansible-galaxy command.
+This is a drop in replacement role skeleton used to create ansible roles with the ansible-galaxy command. Customization is done by modifying files and/or [Jinja2](http://jinja.pocoo.org/) templates found in `skeleton` directory.
 
 ## Requirements
 
 - Ansible
+- Python
 
 ## Recommended
 
@@ -17,27 +18,27 @@ Running Ansible in a virtual environment allows for a lot of testing flexibility
 
 ## Variables
 
-List of internal variables used by the role:
+List of internal variables used by the generated role:
 
     fact_controller_home
     fact_controller_user
 
-### Usage
+#### Role Name
 
-#### Create role on github or other git server
+##### Roles long name
+
+Used as the roles repository name in cases where you have a single role per repository.
 
 ```shell
 ansible-role-fetch
 ```
 
-#### Clone empty role locally
+##### Roles short name
 
-#### Create role using this role
-
-Use the new roles short name. for example:
+Name used when cloning a single role repository locally. The *short name* for our role in this example is:
 
 ```shell
-fetch # rather than say ansible-role-fetch
+fetch
 ```
 
 using one of the following methods:
