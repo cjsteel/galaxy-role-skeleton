@@ -41,11 +41,11 @@ Name used when cloning a single role repository locally. The *short name* for ou
 fetch
 ```
 
-using one of the following methods:
+## Usage
 
-You can replace the default ansble-galaxy role skeleton or point to this one using the ansible-galaxy ROLE_SKELETON option.
+### Usage as an alternative to the default ansible-galaxy role skeleton
 
-#### To use as an alternative role skeleton
+Syntax example:
 
 ```shell
 ansible-galaxy init --role-skeleton=ALTERNATIVE_ROLE_SKELETON_PATH new_role_short_name
@@ -57,10 +57,11 @@ Real world example:
 mkdir ~/projects
 cd ~/projects
 git clone git@github.com:cjsteel/galaxy-role-skeleton.git
+cd ~/projects/project/roles
 ansible-galaxy init --role-skeleton=~/projects/galaxy-role-skeleton/skeleton -f fetch -vvv
 ```
 
-#### Replacing the ansible galaxy default role skeleton
+### As a replacement for the default ansible galaxy default role skeleton
 
 ```shell
 cd ~/miniconda2/envs/ansible/lib/python2.7/site-packages/ansible/galaxy/data/default
