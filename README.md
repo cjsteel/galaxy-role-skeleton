@@ -1,9 +1,9 @@
 ## galaxy-role-skeleton
 
-[![Travis CI](http://img.shields.io/travis/csteel/ansible-rolegalaxy-role-skeleton/default.svg?style=flat)](http://travis-ci.org/csteel/ansible-rolegalaxy-role-skeleton/default)
+[![Travis CI](http://img.shields.io/travis/csteel/galaxy-role-skeleton/default.svg?style=flat)](http://travis-ci.org/csteel/galaxy-role-skeleton/default)
 [![Platforms](http://img.shields.io/badge/platforms-debian%20/%20ubuntu-lightgrey.svg?style=flat)](#)
 
-This is a drop in replacement role skeleton used to create ansible roles with the ansible-galaxy command. Customization is done by modifying files and/or [Jinja2](http://jinja.pocoo.org/) templates found in `skeleton` directory.
+This project can be used as a stand alone or drop in alternative to the default ansible-galaxy template that is used with the `ansbile galaxy init` command to create new ansible galaxy roles. Customization is done by modifying files and/or [Jinja2](http://jinja.pocoo.org/) templates found in the projects  `skeleton` directory.
 
 ## Requirements
 
