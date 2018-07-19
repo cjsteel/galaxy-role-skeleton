@@ -1,0 +1,41 @@
+--- # roles/{{ role_name }}/tests/vagrant/site.yml
+{% raw %}
+# run any pre tasks on target node
+
+- hosts: all
+  become: true
+  gather_facts: false
+  pre_tasks:
+
+    - name: "Set projects variables and ensure desired python(s) installed on nodes"
+      import_tasks: pre_tasks.yml
+
+# run any other roles that need to be run before this one
+
+- hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    - upgrade_identifier : "vagrant role test"
+    - upgrade_debug : true #
+    - upgrade_all   : true # all supported operating systems
+    - upgrade_dist  : true # debian systems only
+    - upgrade_clean : true # clean the cache on all os that support this
+
+  roles:
+    - ../../../upgrade
+{% endraw %}
+
+# Now we run the current role
+
+- hosts: all
+  remote_user: vagrant
+  become: false
+  vars:
+
+    - {{ role_name }}_controller_user : '{{ '{{' }} fact_controller_user {{ '}}' }}'
+    - {{ role_name }}_deployment_user : 'vagrant'
+    - {{ role_name }}_debug           : true
+
+  roles:
+    - ../../../

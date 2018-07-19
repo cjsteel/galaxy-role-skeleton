@@ -1,0 +1,91 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+
+  pre_tasks:
+
+{% raw %}
+    - set_fact: fact_controller_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_controller_user
+
+    - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
+    - debug: var=fact_controller_home
+
+    - set_fact: fact_role_path="{{ lookup('pipe','pwd')|dirname }}"
+    - debug: var=fact_role_path
+{% endraw %}
+
+#    - set_fact: ansible_user='travis'
+
+    - name: "Ensure that our target has python2.x for Ansible gather facts (Sometimes Ubuntu 16.04 does not)"
+      raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
+      register: output
+      changed_when:
+       - output.stdout != ""
+       - output.stdout != "\r\n"
+      ignore_errors: yes
+
+
+    - name: "Now that we are sure Python 2.7 is installed we can gather our facts"
+      setup:
+
+  vars:
+
+    - resources_debug : 'true'
+
+## controller user vars
+
+    - project_controller_user           : '{{ '{{' }} fact_controller_user {{ '}}' }}'
+    - project_controller_home           : '{{ '{{' }} fact_controller_home {{ '}}' }}'
+    - project_controller_resources_home : '{{ '{{' }} project_controller_home {{ '}}' }}'
+
+    - {{ role_name }}_controller_user           : '{{ '{{' }} project_controller_user {{ '}}' }}'
+    - {{ role_name }}_controller_home           : '{{ '{{' }} project_controller_home {{ '}}' }}'
+    - {{ role_name }}_controller_resources_root : '{{ '{{' }} project_controller_resources_home {{ '}}' }}'
+
+## deployment user vars
+
+    - project_deployment_user           : 'travis'
+    - project_deployment_home           : '/home/{{ '{{' }} project_deployment_user {{ '}}' }}'
+    - project_deployment_resources_home : '{{ '{{' }} project_deployment_home {{ '}}' }}'
+
+    - {{ role_name }}_deployment_user           : '{{ '{{' }} project_deployment_user {{ '}}' }}'
+    - {{ role_name }}_deployment_home           : '{{ '{{' }} project_deployment_home {{ '}}' }}'
+    - {{ role_name }}_deployment_resources_root : '{{ '{{' }} project_deployment_resources_home {{ '}}' }}'
+
+# Role dependencies
+  roles:
+
+#    - epel
+#    - haveged
+#    - { role: gpg, ansible_user: ubuntu }
+
+- hosts: all
+  become: false
+  gather_facts: true
+  vars:
+
+## controller user vars
+
+    - project_controller_user           : '{{ '{{' }} fact_controller_user {{ '}}' }}'
+    - project_controller_home           : '{{ '{{' }} fact_controller_home {{ '}}' }}'
+    - project_controller_resources_home : '{{ '{{' }} project_controller_home {{ '}}' }}'
+
+    - {{ role_name }}_controller_user           : '{{ '{{' }} project_controller_user {{ '}}' }}'
+    - {{ role_name }}_controller_home           : '{{ '{{' }} project_controller_home {{ '}}' }}'
+    - {{ role_name }}_controller_resources_root : '{{ '{{' }} project_controller_resources_home {{ '}}' }}'
+
+## deployment user vars
+
+    - project_deployment_user           : 'travis'
+    - project_deployment_home           : '/home/{{ '{{' }} project_deployment_user {{ '}}' }}'
+    - project_deployment_resources_home : '{{ '{{' }} project_deployment_home {{ '}}' }}'
+
+    - {{ role_name }}_deployment_user           : '{{ '{{' }} project_deployment_user {{ '}}' }}'
+    - {{ role_name }}_deployment_home           : '{{ '{{' }} project_deployment_home {{ '}}' }}'
+    - {{ role_name }}_deployment_resources_root : '{{ '{{' }} project_deployment_resources_home {{ '}}' }}'
+
+  roles:
+
+    - ../../
