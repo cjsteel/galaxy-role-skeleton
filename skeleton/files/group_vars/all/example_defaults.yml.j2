@@ -1,15 +1,16 @@
---- # group_vars/all/defaults.yml
+---
+# group_vars/all/example_defaults.yml
 {% raw %}
 ## controller user vars
 
-project_controller_user_name      : '{{ fact_controller_user }}'
-project_controller_user_home      : '{{ fact_controller_home }}'
-project_controller_resources_root : '{{ project_controller_user_home }}/src/sw'
+project_controller_user: '{{ fact_controller_user }}'
+project_controller_home: '{{ fact_controller_home }}'
+project_controller_resources_root: '{{ project_controller_home }}/src/sw'
 
 ## deployment user vars
 
-project_deployment_user_name      : '{{ project_controller_user_name }}'
-project_deployment_user_home      : '/home/{{ project_deployment_user_name }}'
-project_deployment_resources_root : '{{ project_deployment_user_home }}/src/sw'
+project_deployment_user: '{{ project_controller_user }}'
+project_deployment_home: '/home/{{ project_deployment_user }}'
+project_deployment_resources_root: '{{ project_deployment_home }}/src/sw'
+{%- endraw %}
 
-{% endraw %}

@@ -1,10 +1,11 @@
---- #roles/{{ role_name }}/meta/main.yml
+---
+# roles/{{ role_name }}/meta/main.yml
 
 dependencies:
 
-  - role: cjsteel.resources
-    resources_on_local : '{{ '{{' }} {{ role_name }}_resources_on_local {{ '}}' }}'
-    resources_on_remote: '{{ '{{' }} {{ role_name }}_resources_on_remote {{ '}}' }}'
+#  - role: cjsteel.resources
+#    resources_on_local : '{{ '{{' }} {{ role_name }}_resources_on_local {{ '}}' }}'
+#    resources_on_remote: '{{ '{{' }} {{ role_name }}_resources_on_remote {{ '}}' }}'
 
 #  - role: acemenu
 
@@ -16,14 +17,28 @@ galaxy_info:
   min_ansible_version: '1.7.1'
 
   platforms:
+    - name: EL
+      versions:
+        - 5
+        - 6
+        - 7
     - name: Ubuntu
       versions:
+        - bionic
+        - precise
+        - trusty
         - xenial
+    - name: Debian
+      versions:
+        - jessie
+        - squeeze
+        - stretch
+        - wheezy
 
   galaxy_tags:
     - mcin
     - {{ role_name }}
-    - package
-    # NOTE: A tag is limited to a single word comprised of
-    # alphanumeric characters. Maximum 20 tags per role.
+    - centos
+    - debian
+    - ubuntu
 

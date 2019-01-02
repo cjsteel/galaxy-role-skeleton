@@ -7,35 +7,128 @@
   gather_facts: false
   pre_tasks:
 
+# Explicitly set the deployment user to be the current user and UID.
+#
+# This should not be confused with the **initial administrative user** (for example vagrant or ubuntu) used
+# to create the **deployment user** on any the targeted systems (nodes).
+
+    - set_fact: fact_deployment_user="{{ lookup('env','USER') }}"
+    - debug: var=fact_deployment_user
+
+    - set_fact: fact_deployment_user_uid="{{ lookup('pipe','getent passwd `whoami` | cut -d ":" -f 3') }}"
+    - debug: var=fact_deployment_user_uid
+
     - name: "Set projects variables and ensure desired python(s) installed on nodes"
       import_tasks: pre_tasks.yml
 
 # run any other roles that need to be run before this one
 
 - hosts: all
+  remote_user: 'vagrant'        # our initial administrative user used to create our
+  become: false                 # deployment user
+  pre_tasks:
+
+    - name: "DEBUG - debug the value of custom variables list"
+      debug: var='{{ item }}'
+      with_items:
+
+        - ansible_host
+        - ansible_hostname
+        - ansible_connection
+        - ansible_ssh_private_key_file
+        - fact_controller_user          
+        - ansible_user                      # notice that this is still vagrant!
+
+#  vars:
+{% endraw %}
+#    - {{ role_name }}_debug : true
+{% raw %}
+    - deployment_user: true # for DEBUGGING set to false to skip deployment_user role
+  roles: 
+
+    - { name: "deployment_user",
+        role: deployment_user,
+        deployment_user_debug    : true,
+        deployment_user_state    : 'present',
+        deployment_user_username : '{{ fact_deployment_user }}',        # could use a better name
+        deployment_user_uid      : '{{ fact_deployment_user_uid }}',
+        deployment_user_home     : '/home/{{ deployment_user_username }}',
+        deployment_user_home_mode: '0750',
+        when: deployment_user }
+
+# run our role
+
+- hosts: all
+  remote_user: '{{ fact_controller_user }}' # our deployment user
   become: true
   gather_facts: true
   vars:
-    - upgrade_identifier : "vagrant role test"
-    - upgrade_debug : true #
-    - upgrade_all   : true # all supported operating systems
-    - upgrade_dist  : true # debian systems only
-    - upgrade_clean : true # clean the cache on all os that support this
 
-  roles:
-    - ../../../upgrade
 {% endraw %}
-
-# Now we run the current role
-
-- hosts: all
-  remote_user: vagrant
-  become: false
-  vars:
-
-    - {{ role_name }}_controller_user : '{{ '{{' }} fact_controller_user {{ '}}' }}'
-    - {{ role_name }}_deployment_user : 'vagrant'
-    - {{ role_name }}_debug           : true
+    - {{ role_name }}_debug : true
+{% raw %}
+    - upgrade: true  # set to true to run upgrade role
+    - epel: true      # set to true to run epel role
+    - shorewall: true # set to true to run shorewall role
 
   roles:
-    - ../../../
+
+    - { role: epel, when: ansible_distribution == 'CentOS' and ansible_distribution_version == 
+'6.4' and epel }
+
+    - { name: "Round 1 - Upgrade all targets",
+        role: upgrade, upgrade_all : true,
+        upgrade_identifier: "Round 1 - Upgrade all targets",
+        when: upgrade }
+
+    - { name: "Round 1 - Reboot all targets",
+        role: reboot, reboot_target: true,
+        reboot_identifier: "Round 1 - Reboot all targets",
+        reboot_port: '{{ ansible_port }}',      # value comes from tests/vagrant/generated_inventory
+        reboot_hostname: '{{ ansible_host }}',  # value comes from tests/vagrant/generated_inventory
+        reboot_pause: "80",
+        when: upgrade }
+
+    - { name: "Round 2 - Upgrade all targets again",
+        role: upgrade, upgrade_all : true,
+        upgrade_identifier: "Round 2 - Run a second upgrade",
+        when: upgrade }
+
+    - { name: "Round 2 - Reboot all target systems",
+        role: reboot, reboot_target: true,
+        reboot_identifier: "Round 2 - Reboot after second upgrade run",
+        reboot_port: '{{ ansible_port }}',      # value comes from tests/vagrant/generated_inventory
+        reboot_hostname: '{{ ansible_host }}',  # value comes from tests/vagrant/generated_inventory
+        reboot_pause: "60",
+        when: upgrade }
+
+    - { name: "Round 3 - dist-upgrade on all applicable systems",
+        role: upgrade, upgrade_dist  : true,
+        upgrade_identifier: "Round 3 - Run dist-upgrade",
+        when: upgrade }
+
+    - { name: "Round 3 - Reboot all target systems",
+        role: reboot, reboot_target: true,
+        reboot_identifier: "Round 3 - Reboot after dist-upgrade",
+        reboot_port: '{{ ansible_port }}',      # value comes from tests/vagrant/generated_inventory
+        reboot_hostname: '{{ ansible_host }}',  # value comes from tests/vagrant/generated_inventory
+        reboot_pause: "80",
+        when: upgrade }
+
+    - { name: "Round 4 - Clean package manager cache - optional",
+        role: upgrade, upgrade_clean : true,
+        upgrade_identifier: "Round 4 - Clean package manager cache",
+        when: upgrade }
+
+    - { name: "Round 4 - Reboot all targeted systems",
+        role: reboot, reboot_target: true,
+        reboot_pause: "60",
+        reboot_identifier: "Round 4 - Reboot after cleaning cache, is everything still OK?",
+        reboot_port: '{{ ansible_port }}',      # value comes from tests/vagrant/generated_inventory
+        reboot_hostname: '{{ ansible_host }}',  # value comes from tests/vagrant/generated_inventory
+        reboot_debug: true,
+        reboot_testing: true, 
+        reboot_delay: 5,       # Number of seconds to wait before starting to poll.
+        reboot_pause: 60,      # Pause after SSH port availablilty (allows for post boot activites)
+        when: upgrade }
+{% endraw %}

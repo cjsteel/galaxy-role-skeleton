@@ -9,71 +9,97 @@
   boxes = [
     {
       :name => "stretch",
-      :box => "debian/stretch64",
       :distribution => "debian",
+      :box => "debian/stretch64",
       :version => "9.4.0",
+#      :box => "natx/debian-stretch-amd64-desktop",
+#      :version => "0.0.5",
       :ip => '10.0.0.10',
       :cpu => "50",
 #      :disk_size => "10GB",
       :ram => "256"
     },
     {
-      :name => "precise",
-      :box => "ubuntu/precise64",
-      :distribution => "ubuntu",
-      :version => "20170427.0.0",
+      :name => "jessie",
+      :distribution => "debian",
+      :box => "debian/stretch64",
+      :version => "9.4.0",
+#      :box => "gtemgoua/debian-dev-workstation",
+#      :version => "0.0.1",
       :ip => '10.0.0.11',
       :cpu => "50",
 #      :disk_size => "10GB",
       :ram => "256"
     },
     {
-      :name => "trusty",
-      :box => "ubuntu/trusty64",
+      :name => "precise",
       :distribution => "ubuntu",
+      :box => "ubuntu/precise64",
+      :version => "20170427.0.0",
+#      :box => "box-cutter/ubuntu1204-desktop",
+#      :version => "2.0.26",
+      :ip => '10.0.0.21',
+      :cpu => "50",
+#      :disk_size => "10GB",
+      :ram => "256"
+    },
+    {
+      :name => "trusty",
+      :distribution => "ubuntu",
+      :box => "ubuntu/trusty64",
       :version => "20180510.0.5",
-      :ip => '10.0.0.12',
+#      :box => "box-cutter/ubuntu1404-desktop",
+#      :version => "2.0.26",
+      :ip => '10.0.0.22',
       :cpu => "50",
 #      :disk_size => "10GB",
       :ram => "256"
     },
     {
       :name => "xenial",
-      :box => "ubuntu/xenial64",
       :distribution => "ubuntu",
+      :box => "ubuntu/xenial64",
       :version => "20180522.0.0",
-      :ip => '10.0.0.13',
+#      :box => "jcaraballo/ubuntu-desktop-xenial",
+#      :version => "0.0.3",
+      :ip => '10.0.0.23',
       :cpu => "50",
 #      :disk_size => "10GB",
       :ram => "256"
     },
     {
       :name => "bionic",
-      :box => "ubuntu/bionic64",
       :distribution => "ubuntu",
+      :box => "ubuntu/bionic64",
       :version => "20180717.1.0",
 #      :version => "20180522.0.0",
-      :ip => '10.0.0.13',
+#      :box => "teknikersai/ubuntu-desktop-bionic64",
+#      :version => "0.0.2",
+      :ip => '10.0.0.24',
       :cpu => "50",
 #      :disk_size => "10GB",
       :ram => "256"
     },
     {
       :name => "centos6",
-      :box => "centos/6",
       :distribution => "redhat",
+      :box => "centos/6",
       :version => "1804.02",
-      :ip => '10.0.0.15',
+#      :box => "Mitsutoshi-NAKANO/CentOS6jaDesktop",
+#      :version => "0.6.0",
+      :ip => '10.0.0.31',
       :cpu => "50",
 #      :disk_size => "10GB",
       :ram => "256"
     },
     {
       :name => "centos7",
-      :box => "centos/7",
       :distribution => "redhat",
+      :box => "centos/7",
       :version => "1804.02",
-      :ip => '10.0.0.16',
+#      :box => "dalmait/centos7",
+#      :version => "0.1.8",
+      :ip => '10.0.0.32',
       :cpu => "50",
 #      :disk_size => "10GB",
       :ram => "256"
@@ -82,6 +108,15 @@
 
   Vagrant.configure("2") do |config|
     boxes.each do |box|
+#      config.vbguest.auto_update = true
+#     https://github.com/dotless-de/vagrant-vbguest
+#     run something like this:
+#     mkdir ~/resources/sw/ubuntu/16.04/virtualbox/5.2.16
+#     wget http://download.virtualbox.org/virtualbox/5.2.16/VBoxGuestAdditions_5.2.16.iso
+#     then the config.vbguest.iso_path below will work:
+#
+      config.vbguest.iso_path = "#{ENV['HOME']}/resources/sw/ubuntu/16.04/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
+#      config.vbguest.iso_upload_path = "/tmp"
       config.vm.define box[:name] do |vms|
         vms.vm.box = box[:box]
  #       vms.disksize.size = box[:disk_size]

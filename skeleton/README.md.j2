@@ -1,66 +1,75 @@
 # roles/{{ role_name }}/README.md
 
+## Status
+
 [![Build Status](https://travis-ci.org/cjsteel/{{ role_name }}.svg?branch=master)](https://travis-ci.org/cjsteel/{{ role_name }})
 [![Travis CI](http://img.shields.io/travis/csteel/{{ role_name }}/default.svg?style=flat)](http://travis-ci.org/csteel/{{ role_name }}/default)
 [![Platforms](http://img.shields.io/badge/platforms-debian%20/%20ubuntu-lightgrey.svg?style=flat)](#)
 
 ## Description
 
-{{ role_name }} is an Ansible role used to  
+{{ role_name }} is an Ansible role used to...
 
-## Recommended
+## Roadmap
 
-Running Ansible in a virtual environment allows for a lot of testing flexibility.
+* [ROADMAP.md](ROADMAP.md)
 
-* [docs/ansible-setup](docs/ansible-setup.md)
+## References
+
+* [docs.ansible.com](https://docs.ansible.com/)
 
 ## Requirements
 
+### Production
+
 * Ansible
+
+### For Local Testing
+
+* [Vagrant](https://www.vagrantup.com/) - (Tested using version 2.1.1)
+* Vagrant plugins:
+  * [vagrant-disksize (0.1.2)](https://github.com/sprotheroe/vagrant-disksize)
+  * vagrant-vbguest (0.15.2) - Recommended [vagrant-vbguest](https://github.com/cjsteel/vagrant-vbguest)
+  * vai (0.9.3) - For testing with multiple vms [vagrant-plugin-vai](https://github.com/cjsteel/vagrant-plugin-vai) 
+* [Virtual Box](https://www.virtualbox.org/)
+  * Tested using Version 5.2.14 r123301 (Qt5.6.1) 
 
 ## Variables
 
-### project_name/{{ role_name }}.yml
+### defaults/main.yml
 
-* [example_playbook.yml](files/example_playbook.yml)
+* [defaults/main.yml](defaults/main.yml) contains all of the required variables.
 
-To install:
+### project_name/site.yml example
 
-```shell
-cd project_directory
-cp roles/{{ role_name }}/files/example_playbook.yml {{ role_name }}.yml
-# edit if required
-nano {{ role_name }}.yml
-```
-
-### project_name/site.yml
-
-* [example_{{ role_name }}.yml](files/example_site.yml)
-
-From the projects main directory run the following:
-
-```yaml
-cp roles/{{ role_name }}/files/example_playbook.yml {{ role_name }}.yml
-cat {{ role_name }}.yml
-```
-
-### project/group_vars/all/project_defaults.yml
-
-[files/group_vars/all/example_defaults.yml](files/group_vars/all/example_defaults.yml)
-
-```yaml
-cp roles/{{ role_name }}/files/group_vars/all/example_defaults.yml group_vars/all/project_defaults.yml
-cat group_vars/all/project_defaults.yml
-```
+* [example_{{ role_name }}.yml](files/example_site.yml) may contain an example entry.
 
 ## Testing
 
-Move into the role directory and run vagrant:
+To test with all VM's defined in Vagrantfile run the following:
 
 ```shell
 cd roles/{{ role_name }}
 vagrant up
 ```
+
+To run on a specific VM's
+```shell
+vagrant up xenial
+```
+
+### VM's tested with Vagrant and Virtualbox
+
+pass, fail, untested
+
+| Distribution | Results  |
+| ------------ | -------- |
+| precise      | untested |
+| trusty       | untested |
+| xenial       | untested |
+| bionic       | untested |
+| CentOS 6     | untested |
+| CentOS 7     | untested |
 
 ## Authors and License
 

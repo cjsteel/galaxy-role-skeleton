@@ -7,10 +7,10 @@
 - set_fact: fact_controller_home="{{ lookup('env','HOME') }}"
 - debug: var=fact_controller_home
 
-- set_fact: fact_projects_parent="{{ lookup('pipe','cd ../../../../ && pwd')|dirname }}"
+- set_fact: fact_projects_parent="{{ lookup('pipe','cd ../../../../../ && pwd')|dirname }}"
 - debug: var=fact_projects_parent
 
-- set_fact: fact_project_path="{{ lookup('pipe','cd ../../../ && pwd')|dirname }}"
+- set_fact: fact_project_path="{{ lookup('pipe','cd ../../../../ && pwd')|dirname }}"
 - debug: var=fact_project_path
 
 - set_fact: fact_role_path="{{ lookup('pipe','cd ../ && pwd')|dirname }}"
@@ -30,13 +30,30 @@
 
 - name: "Ensure CentOS targets have python2.x so Ansible can gather facts"
   become_user: root
-  raw: bash -c "test -e /usr/bin/python || yum install libselinux-python"
+  raw: bash -c "test -e /usr/bin/python || yum install --assumeyes python"
   register: output
   changed_when:
    - output.stdout != ""
    - output.stdout != "\r\n"
   ignore_errors: yes
 
+- name: "Ensure CentOS targets have libselinux-python so Ansible run templating"
+  become_user: root
+  raw: yum install --assumeyes libselinux-python
+  register: output
+  changed_when:
+   - output.stdout != ""
+   - output.stdout != "\r\n"
+  ignore_errors: yes
+
+- name: "Required by CentOS 7 targets for ansible to access lsb facts"
+  become_user: root
+  raw: yum install --assumeyes redhat-lsb-core
+  register: output
+  changed_when:
+   - output.stdout != ""
+   - output.stdout != "\r\n"
+  ignore_errors: yes
 
 - name: "Now that we are sure Python is installed on all hosts we can gather our facts"
   setup:

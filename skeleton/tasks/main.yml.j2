@@ -1,12 +1,135 @@
---- # roles/{{ role_name }}/tasks/main.yml
+---
+# roles/{{ role_name }}/tasks/main.yml
 
+# START - boilerplate tasks
+{% raw %}
 - name: Load OS specific variables
-  include_vars: "{{ '{{' }} fact_role_path {{ '}}' }}/vars/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
-
-- name: "Debug variable values"
-  include: "{{ '{{' }} fact_role_path {{ '}}' }}/tasks/debug.yml"
-  when: {{ role_name }}_debug
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ fact_role_path }}/vars/{{ ansible_os_family | lower }}.yml"
+      skip: true
 
 - name: Run any OS specific tasks
-  include: "{{ '{{' }} fact_role_path {{ '}}' }}/tasks/{{ '{{' }} ansible_os_family | lower {{ '}}' }}.yml"
+  include: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ fact_role_path }}/tasks/{{ ansible_os_family | lower }}.yml"
+      skip: true
+
+- name: "Load distribution (centos, ubuntu) default variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ fact_role_path }}/defaults/{{ ansible_distribution | lower }}.yml"
+      skip: true
+{% endraw %}
+- name: "DEBUG - Debug {{ role_name }} variable values"
+  include: "{{ '{{' }} item {{ '}}' }}"
+  with_first_found:
+    - files:
+        - "{{ '{{' }} fact_role_path {{ '}}' }}/tasks/debug.yml"
+      skip: true
+  when: {{ role_name }}_debug is defined and {{ role_name }}_debug
+
+# END - boilerplate tasks
+
+# OS Versions
+
+## DEBUGGING
+
+- name: "DEBUG - value of ansible_distribution"
+  debug: var=ansible_distribution
+  when: {{ role_name }}_debug
+
+- name: "DEBUG - value of ansible_distribution_version"
+  debug: var=ansible_distribution_version
+  when: {{ role_name }}_debug
+
+- name: "DEBUG - value of ansible_distribution_major_version"
+  debug: var=ansible_distribution_major_version
+  when: {{ role_name }}_debug
+
+## CentOS
+
+### CentOS 5
+
+- name: "Run CentOS 5 specific tasks"
+  include_tasks: centos_5.yml
+  static: false
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version| int == 5
+
+### CentOS 6
+
+- name: "Run CentOS 6 specific tasks"
+  include_tasks: centos_6.yml
+  static: false
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version| int == 6
+
+### CentOS 7
+
+- name: "Run CentOS 7 specific tasks"
+  include_tasks: centos_7.yml
+  static: false
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version| int == 7
+
+## Debian
+
+### Debian 6 (Squeeze)
+
+- name: "Run Debian 6 (Squeeze) specific tasks"
+  include_tasks: debian_6.yml
+  static: false
+  when: ansible_distribution == 'Debian' and ansible_distribution_major_version| int == 6
+
+### Debian 7 (Wheezy)
+
+- name: "Run Debian 7 (Wheezy) specific tasks"
+  include_tasks: debian_7.yml
+  static: false
+  when: ansible_distribution == 'Debian' and ansible_distribution_major_version| int == 7
+
+### Debian 8 (Jesse)
+
+- name: "Run Debian 8 (Jessie) specific tasks"
+  include_tasks: debian_8.yml
+  static: false
+  when: ansible_distribution == 'Debian' and ansible_distribution_major_version| int == 8
+
+### Debian 9 stable - (Stretch)
+
+- name: "Run Debian 9 (Stretch) specific tasks"
+  include_tasks: debian_9.yml
+  static: false
+  when: ansible_distribution == 'Debian' and ansible_distribution_major_version| int == 9
+
+## Ubuntu
+
+### Ubuntu 12
+
+- name: "Run Ubuntu 12 specific tasks"
+  include_tasks: ubuntu_12.04.yml
+  static: false
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '12.04'
+
+### Ubuntu 14
+
+- name: "Run Ubuntu 14 specific tasks"
+  include_tasks: ubuntu_14.04.yml
+  static: false
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '14.04'
+
+### Ubuntu 16
+
+- name: "Run Ubuntu 16 specific tasks"
+  include_tasks: ubuntu_16.04.yml
+  static: false
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '16.04'
+
+### Ubuntu 18
+
+- name: "Run Ubuntu 18 specific tasks"
+  include_tasks: ubuntu_18.04.yml
+  static: false
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '18.04'
 

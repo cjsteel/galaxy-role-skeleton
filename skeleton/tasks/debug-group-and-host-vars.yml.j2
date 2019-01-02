@@ -1,0 +1,10 @@
+---
+# roles/{{ role_name }}/tasks/debug-group-and-host-vars.yml
+
+# Debug group_vars and host_vars values
+{% raw %}
+- name: "Debug - group and host vars from {{ hostvars[inventory_hostname] }}"
+  debug: msg="{{ hostvars[inventory_hostname] }}"
+{%- endraw %}
+  when: {{ role_name }}_debug
+

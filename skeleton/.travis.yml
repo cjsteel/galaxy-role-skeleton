@@ -9,7 +9,7 @@ sudo: false
 addons:
   apt:
     packages:
-    - python-pip
+      - python-pip
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
@@ -26,4 +26,4 @@ install:
 
 script:
   # Check the role/playbook's syntax.
-- ansible-playbook tests/travis_test.yml -i tests/travis_inventory --syntax-check
+  - ansible-playbook tests/travis_test.yml -i tests/travis_inventory --syntax-check

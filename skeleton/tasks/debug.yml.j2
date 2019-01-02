@@ -1,36 +1,68 @@
---- # roles/{{ role_name }}/tasks/debug.yml
+---
+# roles/{{ role_name }}/tasks/debug.yml
 
+# Include /tasks/debug-group-and-host-vars.yml
 
-- debug: var={{ role_name }}_controller_user
-- debug: var={{ role_name }}_controller_home
-- debug: var={{ role_name }}_controller_resources_home
+{% raw %}
+- name: "Debug values for gathered from group and host variables"
+  include: "{{ fact_role_path }}/tasks/debug-group-and-host-vars.yml"
+{% endraw %}
+  when: {{ role_name }}_debug
 
-- debug: var={{ role_name }}_deployment_user
-- debug: var={{ role_name }}_deployment_home
-- debug: var={{ role_name }}_deployment_resources_home
+# Include /tasks/debug-playbook-vars.yml
 
-#- debug: var={{ role_name }}_major
-#- debug: var={{ role_name }}_moderate_revision
-#- debug: var={{ role_name }}_minor_revision
-#- debug: var={{ role_name }}_build
+{% raw %}
+- name: "Debug - ansible playbook variable values"
+  include: "{{ fact_role_path }}/tasks/debug-playbook-vars.yml"
+{% endraw %}
+  when: {{ role_name }}_debug
 
-## Package #
+# Any custom vars you want printed last
+#
+# Some examples
 
-- debug: var={{ role_name }}_package_state
-- debug: var={{ role_name }}_package_version
-- debug: var={{ role_name }}_package_filename
+- name: "Debug - value of inventory_hostname"
+  debug: msg="{{ '{{' }} item {{ '}}' }}"
+  with_items:
+    - inventory_hostname
+    - ansible_hostname
+  when: {{ role_name }}_debug
 
-# Resources
+{% raw %}
+- name: "Debug - ansible playbook variable values"
+  debug: msg="{{ ansible_hostname }}"
+{% endraw %}
+  when: {{ role_name }}_debug
 
-- debug: var={{ role_name }}_package_url
-- debug: var={{ role_name }}_checksum_url
-- debug: var={{ role_name }}_checksum_sig_url
+{% raw %}
+- name: "Debug - ansible playbook variable values"
+  debug: msg="{{ fact_role_path }}"
+{% endraw %}
+  when: {{ role_name }}_debug
 
-- debug: var={{ role_name }}_controller_resources_dir
-- debug: var={{ role_name }}_deployment_resources_dir
+## Distribution
 
-# Directories
+{%- raw %}
+- name: "Debug - ansible_distribution"
+  debug: msg="{{ ansible_distribution }}"
+{%- endraw %}
+  when: {{ role_name }}_debug
 
-- debug: var={{ role_name }}_ensure_dirs_on_remote
-- debug: var={{ role_name }}_ensure_dirs_on_local
+{%- raw %}
+- name: "Debug - ansible_distribution_release"
+  debug: msg="{{ ansible_distribution_release }}"
+{%- endraw %}
+  when: {{ role_name }}_debug
+
+{%- raw %}
+- name: "Debug - ansible_distribution_version"
+  debug: msg="{{ ansible_distribution_version }}"
+{%- endraw %}
+  when: {{ role_name }}_debug
+
+{%- raw %}
+- name: "Debug - ansible_distribution_major_version"
+  debug: msg="{{ ansible_distribution_major_version }}"
+{%- endraw %}
+  when: {{ role_name }}_debug
 

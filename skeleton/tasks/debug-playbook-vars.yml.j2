@@ -1,0 +1,17 @@
+---
+# roles/{{ role_name }}/tasks/debug-playbook-vars.yml
+
+# Debug other values or specific values you want printed last
+
+{% raw %}
+- name: "Debug - ansible playbook variable values"
+  debug: msg="{{ vars }}"
+{%- endraw %}
+  when: {{ role_name }}_debug
+
+{% raw %}
+- name: "Debug value of playbook vars"
+  debug: msg="{{ vars | to_yaml }}"
+{%- endraw %}
+  when: {{ role_name }}_debug
+
