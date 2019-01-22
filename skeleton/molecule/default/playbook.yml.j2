@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    - {{ role_name }}_deployment_users_home: /root
+    - {{ role_name }}_testing_provider: lxd
+
+  roles:
+    - {{ role_name }}

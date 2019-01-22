@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    - {{ role_name }}_deployment_users_home: /home/vagrant
+    - {{ role_name }}_testing_provider: vagrant
+  roles:
+    - {{ role_name }}
