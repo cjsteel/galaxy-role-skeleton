@@ -1,3 +1,17 @@
 ---
-# roles/{{ role_name }}/vars/main.yml
+# vars file for {{ role_name }}
 
+_{{ role_name }}_packages:
+  default:
+    - {{ role_name }}
+  Alpine:
+    - {{ role_name }}
+    - {{ role_name }}-pop3d
+  Debian:
+    - {{ role_name }}-core
+    - {{ role_name }}-imapd
+    - {{ role_name }}-pop3d
+
+{{ role_name }}_packages: "{{ _{{ role_name }}_packages[ansible_os_family] | default(_{{ role_name }}_packages['default']) }}"
+
+{{ role_name }}_service: {{ role_name }}
